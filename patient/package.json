@@ -92,6 +92,7 @@
     "tailwindcss": "3.3.3",
     "tailwindcss-animate": "^1.0.7",
     "three": "^0.162.0",
+    "twilio": "^5.12.1",
     "typescript": "5.2.2",
     "uuid": "^9.0.1",
     "vaul": "^0.9.9",
