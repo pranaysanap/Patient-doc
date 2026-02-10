@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 import {
     Activity,
     Calendar,
@@ -20,6 +21,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export function Sidebar() {
     const pathname = usePathname();
+    const { user, isLoaded } = useUser();
 
     const navItems = [
         { icon: Home, label: "Overview", href: "/dashboard" },
@@ -70,12 +72,20 @@ export function Sidebar() {
                 <Card className="bg-primary/5 border-primary/20">
                     <CardContent className="p-4 flex items-center gap-3">
                         <Avatar>
-                            <AvatarImage src="/placeholder-user.jpg" />
-                            <AvatarFallback>JD</AvatarFallback>
+                            <AvatarImage src={user?.imageUrl || "/placeholder-user.jpg"} />
+                            <AvatarFallback>
+                                {isLoaded && user
+                                    ? user.fullName?.split(' ').map(n => n[0]).join('').toUpperCase() || user.firstName?.[0]?.toUpperCase() || 'U'
+                                    : 'U'}
+                            </AvatarFallback>
                         </Avatar>
-                        <div>
-                            <p className="text-sm font-medium">John Doe</p>
-                            <p className="text-xs text-muted-foreground">Premium Plan</p>
+                        <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium truncate">
+                                {isLoaded && user ? (user.fullName || user.firstName || 'User') : 'Loading...'}
+                            </p>
+                            <p className="text-xs text-muted-foreground truncate">
+                                Premium Plan
+                            </p>
                         </div>
                     </CardContent>
                 </Card>

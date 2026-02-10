@@ -55,12 +55,6 @@ export default function PrescriptionCard({ prescription, index }: PrescriptionCa
                             <span>{format(prescription.dateIssued, "PPP")}</span>
                         </div>
 
-                        {prescription.doctorSpecialty && (
-                            <div className="inline-block px-3 py-1 rounded-full bg-primary/5 text-primary text-xs font-medium">
-                                {prescription.doctorSpecialty}
-                            </div>
-                        )}
-
                         {prescription.notes && (
                             <p className="text-sm text-muted-foreground border-l-2 border-primary/30 pl-3 py-2 bg-primary/5 rounded-r">
                                 {prescription.notes}
