@@ -41,14 +41,16 @@ export async function makeEmergencyCall(patientName?: string, location?: string)
         const client = getTwilioClient();
 
         // Create the emergency message
-        let voiceMessage = `Emergency alert. SOS button activated.`;
+        let voiceMessage = `Emergency alert! `;
         if (patientName) {
-            voiceMessage += ` Patient name: ${patientName}.`;
+            voiceMessage += `${patientName} is in critical condition and needs medical help immediately. `;
+        } else {
+            voiceMessage += `A patient is in critical condition and needs medical help immediately. `;
         }
         if (location) {
-            voiceMessage += ` Location: ${location}.`;
+            voiceMessage += `Patient location: ${location}. `;
         }
-        voiceMessage += ` Please respond immediately.`;
+        voiceMessage += `Please respond as soon as possible.`;
 
         // Create TwiML voice response (inline, no URL needed - works with free tier)
         const twiml = new Twilio.twiml.VoiceResponse();
@@ -64,14 +66,16 @@ export async function makeEmergencyCall(patientName?: string, location?: string)
         });
 
         // Create SMS message
-        let smsMessage = `🚨 EMERGENCY ALERT: SOS button has been activated.`;
+        let smsMessage = `🚨 EMERGENCY ALERT! `;
         if (patientName) {
-            smsMessage += ` Patient: ${patientName}.`;
+            smsMessage += `${patientName} is in critical condition and needs medical help immediately. `;
+        } else {
+            smsMessage += `A patient is in critical condition and needs medical help immediately. `;
         }
         if (location) {
-            smsMessage += ` Location: ${location}.`;
+            smsMessage += `Location: ${location}. `;
         }
-        smsMessage += ` Please respond immediately or contact emergency services.`;
+        smsMessage += `Please respond or contact emergency services immediately.`;
 
         // Also send an SMS for backup
         const sms = await client.messages.create({
