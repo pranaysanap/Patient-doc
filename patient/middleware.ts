@@ -15,7 +15,6 @@ export const config = {
         "/menstruation-tracker/:path*",
         "/hospital-locator/:path*",
         "/vision/:path*",
-        "/vr-doctor/:path*",
         "/health-hub/:path*",
     ],
 };

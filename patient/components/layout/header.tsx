@@ -42,7 +42,6 @@ const mainNavItems = [
   { name: "Dashboard", href: "/dashboard", icon: Activity },
   { name: "Analysis", href: "/analysis", icon: BarChart2 },
   { name: "Symptom Checker", href: "/symptom-checker", icon: Stethoscope },
-  { name: "VR Doctor", href: "/vr-doctor", icon: Video },
 ];
 
 const menuNavItems: { name: string; href: string; icon: any }[] = [

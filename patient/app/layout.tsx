@@ -6,8 +6,6 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
-import { VaidyaProvider } from '@/components/ai-assistant/vaidya-context';
-import { VaidyaButton, VaidyaStyles } from '@/components/ai-assistant/vaidya-button';
 import { Toaster as SonnerToaster } from 'sonner';
 import { SOSButton } from '@/components/ui/sos-button';
 
@@ -33,19 +31,15 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <VaidyaProvider>
-              <div className="flex min-h-screen flex-col">
-                <Header />
-                <main className="flex-1">{children}</main>
-                <Footer />
-              </div>
-              <VaidyaButton />
-              <VaidyaStyles />
+            <div className="flex min-h-screen flex-col">
+              <Header />
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </div>
 
-              <SOSButton />
-              <Toaster />
-              <SonnerToaster position="top-right" closeButton theme="dark" richColors />
-            </VaidyaProvider>
+            <SOSButton />
+            <Toaster />
+            <SonnerToaster position="top-right" closeButton theme="dark" richColors />
           </ThemeProvider>
         </AuthProvider>
       </body>
