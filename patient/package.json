@@ -75,6 +75,7 @@
     "leva": "^0.10.0",
     "lucide-react": "^0.446.0",
     "next": "^14.2.35",
+    "next-auth": "^4.24.13",
     "next-themes": "^0.3.0",
     "pdf-lib": "^1.17.1",
     "postcss": "8.4.30",

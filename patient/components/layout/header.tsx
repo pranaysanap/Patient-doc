@@ -7,7 +7,16 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { useSession, signOut } from "next-auth/react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Heart,
   Activity,
@@ -16,6 +25,8 @@ import {
   Menu,
   X,
   Stethoscope,
+  LogOut,
+  User,
   Brain,
   Calendar,
   Dumbbell,
@@ -42,6 +53,8 @@ export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const { data: session, status } = useSession();
+  const isLoading = status === "loading";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -93,21 +106,50 @@ export function Header() {
             <ModeToggle />
 
             {/* Authentication Buttons */}
-            <SignedOut>
-              <SignInButton mode="modal">
+            {!session && !isLoading && (
+              <Link href="/sign-in">
                 <Button className="hidden md:flex">Sign In</Button>
-              </SignInButton>
-            </SignedOut>
-            <SignedIn>
-              <UserButton
-                afterSignOutUrl="/"
-                appearance={{
-                  elements: {
-                    avatarBox: "h-9 w-9"
-                  }
-                }}
-              />
-            </SignedIn>
+              </Link>
+            )}
+            {session && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-9 w-9 rounded-full">
+                    <Avatar className="h-9 w-9">
+                      <AvatarImage src={session.user?.image || ""} alt={session.user?.name || ""} />
+                      <AvatarFallback className="bg-primary text-primary-foreground">
+                        {session.user?.name?.charAt(0) || "U"}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none">{session.user?.name}</p>
+                      <p className="text-xs leading-none text-muted-foreground">
+                        {session.user?.email}
+                      </p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/dashboard" className="cursor-pointer">
+                      <User className="mr-2 h-4 w-4" />
+                      <span>Dashboard</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    className="cursor-pointer text-red-600 focus:text-red-600"
+                    onClick={() => signOut({ callbackUrl: "/" })}
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Sign Out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
 
             {/* Hamburger Menu Button */}
             <Button
@@ -176,11 +218,11 @@ export function Header() {
             </div>
 
             {/* Mobile Auth Button */}
-            <SignedOut>
-              <SignInButton mode="modal">
+            {!session && !isLoading && (
+              <Link href="/sign-in">
                 <Button className="w-full mt-4 md:hidden">Sign In</Button>
-              </SignInButton>
-            </SignedOut>
+              </Link>
+            )}
           </div>
         </motion.div>
       )}

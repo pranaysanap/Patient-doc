@@ -6,12 +6,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { useUser } from "@clerk/nextjs";
+import { useSession } from "next-auth/react";
 
 type CallStatus = 'idle' | 'calling' | 'success' | 'error';
 
 export function SOSButton() {
-    const { user } = useUser();
+    const { data: session } = useSession();
+    const user = session?.user;
     const [isPressed, setIsPressed] = useState(false);
     const [showEmergency, setShowEmergency] = useState(false);
     const [countdown, setCountdown] = useState(5);
@@ -35,8 +36,8 @@ export function SOSButton() {
         setCallMessage('Contacting emergency services...');
 
         try {
-            // Get the authenticated patient's full name from Clerk
-            const patientFullName = user?.fullName || user?.firstName || 'Patient';
+            // Get the authenticated patient's full name from Google OAuth
+            const patientFullName = user?.name || user?.email || 'Patient';
 
             // Gather user information
             const callData = {
