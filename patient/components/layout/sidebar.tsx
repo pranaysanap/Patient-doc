@@ -11,7 +11,8 @@ import {
     Settings,
     User,
     Wind,
-    CloudSun
+    CloudSun,
+    FileText
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -25,6 +26,7 @@ export function Sidebar() {
         { icon: Calendar, label: "Doctor Appointments", href: "/doctor-appointments" },
         { icon: Heart, label: "Hospital Locator", href: "/hospital-locator" },
         { icon: User, label: "Patient Report Analysis", href: "/patient-report" },
+        { icon: FileText, label: "Prescriptions", href: "/prescriptions" },
         { icon: Wind, label: "Health Hub", href: "/health-hub" },
         { icon: CloudSun, label: "Mental Wellness", href: "/mental-wellness" },
         { icon: Activity, label: "Fitness Tracker", href: "/fitness-tracker" },
@@ -51,8 +53,8 @@ export function Sidebar() {
                                 <Button
                                     variant={isActive ? "secondary" : "ghost"}
                                     className={`w-full justify-start gap-3 mb-1 ${isActive
-                                            ? "bg-primary/10 text-primary"
-                                            : "text-muted-foreground"
+                                        ? "bg-primary/10 text-primary"
+                                        : "text-muted-foreground"
                                         }`}
                                 >
                                     <item.icon className="h-4 w-4" />
