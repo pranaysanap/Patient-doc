@@ -34,16 +34,8 @@ const mainNavItems = [
   { name: "VR Doctor", href: "/vr-doctor", icon: Video },
 ];
 
-const menuNavItems = [
-  { name: "Doctor Appointments", href: "/doctor-appointments", icon: Calendar },
-
-  { name: "Patient Report Analysis", href: "/patient-report", icon: FileText },
-  { name: "Health Hub", href: "/health-hub", icon: Youtube },
-  { name: "Mental Wellness", href: "/mental-wellness", icon: Brain },
-  { name: "Fitness Tracker", href: "/fitness-tracker", icon: Dumbbell },
-  { name: "Menstruation Tracker", href: "/menstruation-tracker", icon: Droplet },
-  { name: "Maps", href: "/maps", icon: Map },
-  { name: "Learning Center", href: "/learning-center", icon: BookOpen },
+const menuNavItems: { name: string; href: string; icon: any }[] = [
+  // Removed: All features now accessible via Dashboard sidebar
 ];
 
 export function Header() {
@@ -74,7 +66,7 @@ export function Header() {
           <div className="flex items-center">
             <Link href="/" className="flex items-center space-x-2">
               <Stethoscope className="h-8 w-8 text-primary" />
-              <span className="font-bold text-xl">EchoMed</span>
+              <span className="font-bold text-xl">VaidyaSetu</span>
             </Link>
           </div>
 

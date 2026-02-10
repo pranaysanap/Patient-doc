@@ -11,19 +11,19 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { 
-  Activity, 
-  BarChart, 
-  Calendar, 
-  Camera, 
-  Clock, 
-  Dumbbell, 
-  Flame, 
-  Heart, 
-  LineChart, 
-  Plus, 
-  RefreshCw, 
-  Utensils, 
+import {
+  Activity,
+  BarChart,
+  Calendar,
+  Camera,
+  Clock,
+  Dumbbell,
+  Flame,
+  Heart,
+  LineChart,
+  Plus,
+  RefreshCw,
+  Utensils,
   Zap,
   ArrowRight,
   ChevronRight,
@@ -36,33 +36,33 @@ import {
   Bell,
   Award
 } from "lucide-react";
-import { useDrEcho } from "@/components/ai-assistant/dr-echo-context";
-import { 
-  AreaChart, 
-  Area, 
-  BarChart as RechartsBarChart, 
-  Bar, 
-  LineChart as RechartsLineChart, 
-  Line, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip as RechartsTooltip, 
-  Legend, 
-  ResponsiveContainer 
+import { useVaidya } from "@/components/ai-assistant/vaidya-context";
+import {
+  AreaChart,
+  Area,
+  BarChart as RechartsBarChart,
+  Bar,
+  LineChart as RechartsLineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip as RechartsTooltip,
+  Legend,
+  ResponsiveContainer
 } from "recharts";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Tooltip, 
-  TooltipContent, 
-  TooltipProvider, 
-  TooltipTrigger 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
 } from "@/components/ui/tooltip";
 import { generateFitnessResponse } from "@/lib/fitnessRecommendations";
 
 export default function FitnessTrackerPage() {
-  const { openAssistant, sendMessage } = useDrEcho();
+  const { openAssistant, sendMessage } = useVaidya();
   const [activeTab, setActiveTab] = useState("dashboard");
   const [calorieGoal, setCalorieGoal] = useState(2200);
   const [caloriesBurned, setCaloriesBurned] = useState(1450);
@@ -79,13 +79,13 @@ export default function FitnessTrackerPage() {
   const [weightGoal, setWeightGoal] = useState(160);
   const [exerciseTime, setExerciseTime] = useState(0);
   const [isExerciseActive, setIsExerciseActive] = useState(false);
-  
+
   // Add new state variables for Exercise Library
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedExercise, setSelectedExercise] = useState<any | null>(null);
   const [showExerciseDetails, setShowExerciseDetails] = useState(false);
   const [viewAllExercises, setViewAllExercises] = useState(false);
-  
+
   // Add new state variables for enhanced timer
   const [timerMode, setTimerMode] = useState<"stopwatch" | "countdown" | "interval">("stopwatch");
   const [countdownTime, setCountdownTime] = useState(300); // 5 minutes in seconds
@@ -98,7 +98,7 @@ export default function FitnessTrackerPage() {
   const [showTimerSettings, setShowTimerSettings] = useState(false);
   const [timerCompleted, setTimerCompleted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  
+
   // Sample data for charts
   const activityData = [
     { day: "Mon", steps: 9245, calories: 420, activeMinutes: 45 },
@@ -109,7 +109,7 @@ export default function FitnessTrackerPage() {
     { day: "Sat", steps: 11240, calories: 580, activeMinutes: 62 },
     { day: "Sun", steps: 8742, calories: 450, activeMinutes: 42 },
   ];
-  
+
   const weightData = [
     { date: "Apr 1", weight: 172.5 },
     { date: "Apr 8", weight: 171.2 },
@@ -119,21 +119,21 @@ export default function FitnessTrackerPage() {
     { date: "May 6", weight: 166.2 },
     { date: "May 13", weight: 165.5 },
   ];
-  
+
   const workouts = [
     { id: 1, name: "Morning Run", type: "Cardio", duration: "30 min", calories: 320, date: "Today, 7:30 AM" },
     { id: 2, name: "Upper Body Strength", type: "Strength", duration: "45 min", calories: 280, date: "Yesterday, 6:15 PM" },
     { id: 3, name: "Yoga Flow", type: "Flexibility", duration: "60 min", calories: 220, date: "May 12, 8:00 AM" },
     { id: 4, name: "HIIT Session", type: "Cardio", duration: "25 min", calories: 310, date: "May 10, 5:30 PM" },
   ];
-  
+
   const meals = [
     { id: 1, name: "Breakfast", time: "7:30 AM", calories: 450, protein: 25, carbs: 55, fat: 15 },
     { id: 2, name: "Lunch", time: "12:15 PM", calories: 680, protein: 35, carbs: 65, fat: 22 },
     { id: 3, name: "Snack", time: "3:30 PM", calories: 220, protein: 10, carbs: 25, fat: 8 },
     { id: 4, name: "Dinner", time: "7:00 PM", calories: 580, protein: 40, carbs: 45, fat: 18 },
   ];
-  
+
   const exerciseLibrary = [
     { id: 1, name: "Push-ups", type: "Strength", muscle: "Chest", equipment: "None", difficulty: "Beginner", description: "A classic bodyweight exercise that strengthens the chest, shoulders, and triceps." },
     { id: 2, name: "Squats", type: "Strength", muscle: "Legs", equipment: "None", difficulty: "Beginner", description: "A fundamental lower body exercise that targets the quadriceps, hamstrings, and glutes." },
@@ -173,10 +173,10 @@ Based on my fitness data:
 
 Could you provide personalized fitness and nutrition recommendations to help me reach my goals?
 `;
-    
+
     // Open the assistant first
     openAssistant();
-    
+
     // Then send the message directly using the provider's sendMessage function
     // This bypasses the DOM manipulation which could be causing issues
     setTimeout(() => {
@@ -190,14 +190,14 @@ Could you provide personalized fitness and nutrition recommendations to help me 
   // Enhanced useEffect for timer with different modes
   useEffect(() => {
     let intervalId = 0;
-    
+
     if (isExerciseActive) {
       if (timerMode === "stopwatch") {
         // Simple stopwatch mode
         intervalId = window.setInterval(() => {
           setExerciseTime(prevTime => prevTime + 1);
         }, 1000);
-      } 
+      }
       else if (timerMode === "countdown") {
         // Countdown timer mode
         intervalId = window.setInterval(() => {
@@ -227,7 +227,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                 return intervalRest;
               }
               return prevTime - 1;
-            } 
+            }
             // If in rest period
             else {
               if (prevTime <= 1) {
@@ -252,12 +252,12 @@ Could you provide personalized fitness and nutrition recommendations to help me 
         }, 1000);
       }
     }
-    
+
     return () => {
       if (intervalId) window.clearInterval(intervalId);
     };
   }, [isExerciseActive, timerMode, isResting, currentRound, intervalRounds, intervalWork, intervalRest]);
-  
+
   // Play sound effect
   const playSound = () => {
     if (audioRef.current) {
@@ -265,13 +265,13 @@ Could you provide personalized fitness and nutrition recommendations to help me 
       audioRef.current.play().catch(e => console.error("Error playing sound:", e));
     }
   };
-  
+
   // Start timer with selected mode
   const startTimer = () => {
     if (timerMode === "stopwatch") {
       // Stopwatch continues from current time
       setIsExerciseActive(true);
-    } 
+    }
     else if (timerMode === "countdown") {
       // Countdown starts from the set time
       if (!isExerciseActive && exerciseTime === 0) {
@@ -290,7 +290,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
     }
     setTimerCompleted(false);
   };
-  
+
   // Reset timer based on mode
   const resetTimer = () => {
     setIsExerciseActive(false);
@@ -299,24 +299,24 @@ Could you provide personalized fitness and nutrition recommendations to help me 
     setIsResting(false);
     setTimerCompleted(false);
   };
-  
+
   // Save completed workout
   const saveWorkout = () => {
     const newWorkout = {
       id: workouts.length + 1,
       name: timerMode === "interval" ? "Interval Training" : "Timed Workout",
       type: "Cardio",
-      duration: formatTime(timerMode === "stopwatch" ? exerciseTime : 
-                          timerMode === "countdown" ? countdownTime - exerciseTime : 
-                          intervalRounds * (intervalWork + intervalRest) - exerciseTime),
+      duration: formatTime(timerMode === "stopwatch" ? exerciseTime :
+        timerMode === "countdown" ? countdownTime - exerciseTime :
+          intervalRounds * (intervalWork + intervalRest) - exerciseTime),
       calories: caloriesBurnedDuringExercise,
-      date: "Today, " + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+      date: "Today, " + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     };
-    
+
     // Show achievement
     setTimerCompleted(true);
   };
-  
+
   // Format time for display
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
@@ -338,24 +338,24 @@ Could you provide personalized fitness and nutrition recommendations to help me 
     } else {
       setSelectedCategory(category);
       let filtered: typeof exerciseLibrary = [];
-      
+
       if (category === "Strength") {
         filtered = exerciseLibrary.filter(ex => ex.type === "Strength");
       } else if (category === "Cardio") {
         filtered = exerciseLibrary.filter(ex => ex.type === "Cardio");
       } else if (category === "Flexibility") {
-        filtered = exerciseLibrary.filter(ex => 
+        filtered = exerciseLibrary.filter(ex =>
           ex.type === "Flexibility" || ex.type === "Core"
         );
       } else if (category === "HIIT") {
-        filtered = exerciseLibrary.filter(ex => 
+        filtered = exerciseLibrary.filter(ex =>
           ex.type === "HIIT" || (ex.type === "Cardio" && ex.difficulty !== "Beginner")
         );
       }
-      
+
       setFilteredExercises(filtered);
     }
-    
+
     setViewAllExercises(true);
     setSelectedExercise(null);
     setShowExerciseDetails(false);
@@ -395,7 +395,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
     // This would typically add the exercise to a workout plan
     // For now, we'll just show a notification
     const message = `Added ${exercise.name} to your workout plan!`;
-    
+
     // Create a temporary notification element
     const notification = document.createElement('div');
     notification.className = 'fixed bottom-4 right-4 bg-primary text-primary-foreground px-4 py-2 rounded-md shadow-lg z-50 flex items-center';
@@ -406,10 +406,10 @@ Could you provide personalized fitness and nutrition recommendations to help me 
       </svg>
       ${message}
     `;
-    
+
     // Add to DOM
     document.body.appendChild(notification);
-    
+
     // Remove after 3 seconds
     setTimeout(() => {
       notification.style.opacity = '0';
@@ -444,7 +444,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
           </div>
         </div>
       </motion.div>
-      
+
       <Tabs defaultValue="dashboard" value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="grid grid-cols-4 w-full mb-8">
           <TabsTrigger value="dashboard" className="flex items-center gap-1">
@@ -464,7 +464,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
             Progress
           </TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="dashboard">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-6">
@@ -499,7 +499,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                         <Progress value={(stepCount / stepGoal) * 100} className="h-2 mt-2" />
                       </CardContent>
                     </Card>
-                    
+
                     <Card>
                       <CardContent className="p-4">
                         <div className="flex items-center justify-between">
@@ -517,14 +517,14 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                             <p className="text-sm font-medium">{caloriesConsumed}</p>
                           </div>
                         </div>
-                        <Progress 
-                          value={(caloriesBurned / calorieGoal) * 100} 
-                          className="h-2 mt-2" 
-                          indicatorClassName="bg-chart-2" 
+                        <Progress
+                          value={(caloriesBurned / calorieGoal) * 100}
+                          className="h-2 mt-2"
+                          indicatorClassName="bg-chart-2"
                         />
                       </CardContent>
                     </Card>
-                    
+
                     <Card>
                       <CardContent className="p-4">
                         <div className="flex items-center justify-between">
@@ -546,7 +546,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                       </CardContent>
                     </Card>
                   </div>
-                  
+
                   <div className="h-80">
                     <ResponsiveContainer width="100%" height="100%">
                       <RechartsBarChart
@@ -556,7 +556,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                         <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                         <XAxis dataKey="day" stroke="hsl(var(--muted-foreground))" />
                         <YAxis stroke="hsl(var(--muted-foreground))" />
-                        <RechartsTooltip 
+                        <RechartsTooltip
                           content={(props) => {
                             const { active, payload } = props;
                             if (active && payload && payload.length > 0 && payload[0]?.payload?.day) {
@@ -564,7 +564,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                               const steps = payload[0].value;
                               const calories = payload[1]?.value || 0;
                               const activeMinutes = payload[2]?.value || 0;
-                              
+
                               return (
                                 <div className="bg-background border border-border p-2 rounded-md shadow-md">
                                   <p className="font-medium">{day}</p>
@@ -592,7 +592,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                   </div>
                 </CardContent>
               </Card>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card>
                   <CardHeader className="pb-2">
@@ -608,11 +608,10 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                       {workouts.slice(0, 3).map((workout) => (
                         <div key={workout.id} className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
-                            <div className={`h-10 w-10 rounded-full flex items-center justify-center ${
-                              workout.type === "Cardio" ? "bg-primary/10" : 
-                              workout.type === "Strength" ? "bg-chart-2/10" : 
-                              "bg-chart-3/10"
-                            }`}>
+                            <div className={`h-10 w-10 rounded-full flex items-center justify-center ${workout.type === "Cardio" ? "bg-primary/10" :
+                              workout.type === "Strength" ? "bg-chart-2/10" :
+                                "bg-chart-3/10"
+                              }`}>
                               {workout.type === "Cardio" ? (
                                 <Heart className="h-5 w-5 text-primary" />
                               ) : workout.type === "Strength" ? (
@@ -635,7 +634,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                           <p className="text-xs text-muted-foreground">{workout.date}</p>
                         </div>
                       ))}
-                      
+
                       <Button className="w-full" onClick={() => setActiveTab("workouts")}>
                         <Plus className="mr-2 h-4 w-4" />
                         Log Workout
@@ -643,7 +642,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                     </div>
                   </CardContent>
                 </Card>
-                
+
                 <Card>
                   <CardHeader className="pb-2">
                     <div className="flex items-center justify-between">
@@ -670,7 +669,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                           <p className="text-sm font-medium">{calorieGoal - caloriesConsumed}</p>
                         </div>
                       </div>
-                      
+
                       <div className="grid grid-cols-3 gap-2">
                         <div className="bg-muted rounded-lg p-2 text-center">
                           <p className="text-xs text-muted-foreground">Protein</p>
@@ -685,7 +684,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                           <p className="text-sm font-medium">63g</p>
                         </div>
                       </div>
-                      
+
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <div className="h-8 w-8 rounded-full bg-chart-2/10 flex items-center justify-center">
@@ -698,8 +697,8 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                         </div>
                         <div className="flex">
                           {Array.from({ length: waterGoal }).map((_, i) => (
-                            <div 
-                              key={i} 
+                            <div
+                              key={i}
                               className={`h-6 w-6 ${i < waterIntake ? "text-chart-2" : "text-muted"}`}
                               onClick={() => setWaterIntake(i + 1)}
                             >
@@ -708,7 +707,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                           ))}
                         </div>
                       </div>
-                      
+
                       <Button className="w-full" onClick={() => setActiveTab("nutrition")}>
                         <Plus className="mr-2 h-4 w-4" />
                         Log Meal
@@ -718,7 +717,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                 </Card>
               </div>
             </div>
-            
+
             <div className="space-y-6">
               <Card>
                 <CardHeader>
@@ -739,13 +738,13 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                       </p>
                     </div>
                   </div>
-                  
+
                   <Button className="w-full" onClick={handleAIRecommendations}>
                     Get AI Recommendations
                   </Button>
                 </CardContent>
               </Card>
-              
+
               <Card>
                 <CardHeader>
                   <CardTitle>Weight Tracker</CardTitle>
@@ -764,7 +763,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                       <p className="text-xl font-medium">{weightGoal} lbs</p>
                     </div>
                   </div>
-                  
+
                   <div className="h-48">
                     <ResponsiveContainer width="100%" height="100%">
                       <RechartsLineChart
@@ -774,7 +773,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                         <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                         <XAxis dataKey="date" stroke="hsl(var(--muted-foreground))" />
                         <YAxis domain={[155, 175]} stroke="hsl(var(--muted-foreground))" />
-                        <RechartsTooltip 
+                        <RechartsTooltip
                           content={(props) => {
                             const { active, payload } = props;
                             if (active && payload && payload.length) {
@@ -790,10 +789,10 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                             return null;
                           }}
                         />
-                        <Line 
-                          type="monotone" 
-                          dataKey="weight" 
-                          stroke="hsl(var(--primary))" 
+                        <Line
+                          type="monotone"
+                          dataKey="weight"
+                          stroke="hsl(var(--primary))"
                           strokeWidth={2}
                           dot={{ r: 4 }}
                           activeDot={{ r: 6 }}
@@ -801,12 +800,12 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                       </RechartsLineChart>
                     </ResponsiveContainer>
                   </div>
-                  
+
                   <div className="flex items-center gap-2">
-                    <Input 
-                      type="number" 
-                      value={weight} 
-                      onChange={(e) => setWeight(parseFloat(e.target.value))} 
+                    <Input
+                      type="number"
+                      value={weight}
+                      onChange={(e) => setWeight(parseFloat(e.target.value))}
                       step="0.1"
                       className="w-24"
                     />
@@ -817,7 +816,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                   </div>
                 </CardContent>
               </Card>
-              
+
               <Card>
                 <CardHeader>
                   <CardTitle>Sleep Tracker</CardTitle>
@@ -836,7 +835,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                       <p className="text-xl font-medium">{sleepGoal} hrs</p>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
                       <span>Sleep Quality</span>
@@ -844,7 +843,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                     </div>
                     <Progress value={75} className="h-2" />
                   </div>
-                  
+
                   <div className="grid grid-cols-2 gap-2">
                     <div className="bg-muted rounded-lg p-2 text-center">
                       <p className="text-xs text-muted-foreground">Bedtime</p>
@@ -860,7 +859,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
             </div>
           </div>
         </TabsContent>
-        
+
         <TabsContent value="workouts">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-6">
@@ -888,23 +887,23 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                         </SelectContent>
                       </Select>
                     </div>
-                    
+
                     <div className="space-y-2">
                       <Label htmlFor="workout-name">Workout Name</Label>
                       <Input id="workout-name" placeholder="e.g., Morning Run" />
                     </div>
-                    
+
                     <div className="space-y-2">
                       <Label htmlFor="workout-duration">Duration (minutes)</Label>
                       <Input id="workout-duration" type="number" min="1" defaultValue="30" />
                     </div>
-                    
+
                     <div className="space-y-2">
                       <Label htmlFor="workout-calories">Calories Burned (estimated)</Label>
                       <Input id="workout-calories" type="number" min="0" defaultValue="250" />
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label>Intensity Level</Label>
                     <div className="flex items-center space-x-2">
@@ -912,22 +911,22 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                       <span className="w-12 text-center font-medium">65%</span>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label>Notes</Label>
-                    <textarea 
+                    <textarea
                       className="w-full min-h-[100px] rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                       placeholder="Add notes about your workout..."
                     />
                   </div>
-                  
+
                   <div className="flex justify-end space-x-2">
                     <Button variant="outline">Cancel</Button>
                     <Button>Save Workout</Button>
                   </div>
                 </CardContent>
               </Card>
-              
+
               <Card>
                 <CardHeader>
                   <div className="flex items-center justify-between">
@@ -948,9 +947,9 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Button 
-                            variant="ghost" 
-                            size="icon" 
+                          <Button
+                            variant="ghost"
+                            size="icon"
                             onClick={() => setShowTimerSettings(true)}
                           >
                             <Settings className="h-4 w-4" />
@@ -967,7 +966,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                   <div className="flex items-center justify-center">
                     <div className="relative h-48 w-48">
                       <div className="absolute inset-0 flex flex-col items-center justify-center">
-                        <motion.div 
+                        <motion.div
                           className="text-4xl font-bold"
                           key={exerciseTime} // Re-animate when time changes
                           initial={{ scale: 0.9, opacity: 0.7 }}
@@ -976,25 +975,25 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                         >
                           {formatTime(exerciseTime)}
                         </motion.div>
-                        
+
                         {timerMode !== "stopwatch" && (
                           <div className="text-sm text-muted-foreground mt-1">
-                            {timerMode === "countdown" 
-                              ? `${Math.floor((exerciseTime / countdownTime) * 100)}% remaining` 
-                              : isResting 
-                                ? `Rest: ${formatTime(exerciseTime)}` 
+                            {timerMode === "countdown"
+                              ? `${Math.floor((exerciseTime / countdownTime) * 100)}% remaining`
+                              : isResting
+                                ? `Rest: ${formatTime(exerciseTime)}`
                                 : `Work: ${formatTime(exerciseTime)}`
                             }
                           </div>
                         )}
-                        
+
                         {timerMode === "stopwatch" && (
                           <div className="text-sm text-muted-foreground mt-1">
                             ~{caloriesBurnedDuringExercise} calories
                           </div>
                         )}
                       </div>
-                      
+
                       <svg className="h-full w-full -rotate-90" viewBox="0 0 100 100">
                         {/* Background circle */}
                         <circle
@@ -1005,7 +1004,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                           stroke="hsl(var(--muted))"
                           strokeWidth="8"
                         />
-                        
+
                         {/* Progress circle for stopwatch */}
                         {timerMode === "stopwatch" && isExerciseActive && (
                           <motion.circle
@@ -1017,14 +1016,14 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                             strokeWidth="8"
                             strokeDasharray="283"
                             initial={{ strokeDashoffset: 283 }}
-                            animate={{ 
-                              strokeDashoffset: 283 - ((exerciseTime % 60) / 60) * 283 
+                            animate={{
+                              strokeDashoffset: 283 - ((exerciseTime % 60) / 60) * 283
                             }}
                             transition={{ duration: 0.5 }}
                             strokeLinecap="round"
                           />
                         )}
-                        
+
                         {/* Progress circle for countdown */}
                         {timerMode === "countdown" && (
                           <motion.circle
@@ -1036,14 +1035,14 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                             strokeWidth="8"
                             strokeDasharray="283"
                             initial={{ strokeDashoffset: 0 }}
-                            animate={{ 
-                              strokeDashoffset: 283 - ((exerciseTime / countdownTime) * 283) 
+                            animate={{
+                              strokeDashoffset: 283 - ((exerciseTime / countdownTime) * 283)
                             }}
                             transition={{ duration: 0.5 }}
                             strokeLinecap="round"
                           />
                         )}
-                        
+
                         {/* Progress circle for interval training */}
                         {timerMode === "interval" && (
                           <motion.circle
@@ -1055,14 +1054,14 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                             strokeWidth="8"
                             strokeDasharray="283"
                             initial={{ strokeDashoffset: 0 }}
-                            animate={{ 
-                              strokeDashoffset: 283 - ((exerciseTime / (isResting ? intervalRest : intervalWork)) * 283) 
+                            animate={{
+                              strokeDashoffset: 283 - ((exerciseTime / (isResting ? intervalRest : intervalWork)) * 283)
                             }}
                             transition={{ duration: 0.5 }}
                             strokeLinecap="round"
                           />
                         )}
-                        
+
                         {/* Pulsing effect when timer is active */}
                         {isExerciseActive && (
                           <motion.circle
@@ -1073,11 +1072,11 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                             stroke="hsl(var(--primary)/30)"
                             strokeWidth="2"
                             initial={{ opacity: 0, scale: 0.8 }}
-                            animate={{ 
+                            animate={{
                               opacity: [0, 1, 0],
                               scale: [0.8, 1.1, 0.8],
                             }}
-                            transition={{ 
+                            transition={{
                               duration: 2,
                               repeat: Infinity,
                               repeatType: "loop"
@@ -1087,14 +1086,14 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                       </svg>
                     </div>
                   </div>
-                  
+
                   <div className="flex flex-col space-y-4">
                     <div className="flex justify-center space-x-4">
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <Button 
-                              variant="outline" 
+                            <Button
+                              variant="outline"
                               size="icon"
                               className="h-12 w-12 rounded-full"
                               onClick={resetTimer}
@@ -1108,8 +1107,8 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                           </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
-                      
-                      <Button 
+
+                      <Button
                         size="icon"
                         className={`h-14 w-14 rounded-full ${isExerciseActive ? 'bg-red-500 hover:bg-red-600' : 'bg-primary hover:bg-primary/90'}`}
                         onClick={isExerciseActive ? () => setIsExerciseActive(false) : startTimer}
@@ -1122,10 +1121,10 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                         </motion.div>
                       </Button>
                     </div>
-                    
+
                     <div className="flex justify-center space-x-2">
-                      <Button 
-                        variant={timerMode === "stopwatch" ? "default" : "outline"} 
+                      <Button
+                        variant={timerMode === "stopwatch" ? "default" : "outline"}
                         size="sm"
                         onClick={() => {
                           setTimerMode("stopwatch");
@@ -1135,8 +1134,8 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                       >
                         Stopwatch
                       </Button>
-                      <Button 
-                        variant={timerMode === "countdown" ? "default" : "outline"} 
+                      <Button
+                        variant={timerMode === "countdown" ? "default" : "outline"}
                         size="sm"
                         onClick={() => {
                           setTimerMode("countdown");
@@ -1146,8 +1145,8 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                       >
                         Countdown
                       </Button>
-                      <Button 
-                        variant={timerMode === "interval" ? "default" : "outline"} 
+                      <Button
+                        variant={timerMode === "interval" ? "default" : "outline"}
                         size="sm"
                         onClick={() => {
                           setTimerMode("interval");
@@ -1162,7 +1161,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                 </CardContent>
               </Card>
             </div>
-            
+
             <div className="space-y-6">
               <Card>
                 <CardHeader>
@@ -1175,11 +1174,10 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                   {workouts.map((workout) => (
                     <div key={workout.id} className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className={`h-10 w-10 rounded-full flex items-center justify-center ${
-                          workout.type === "Cardio" ? "bg-primary/10" : 
-                          workout.type === "Strength" ? "bg-chart-2/10" : 
-                          "bg-chart-3/10"
-                        }`}>
+                        <div className={`h-10 w-10 rounded-full flex items-center justify-center ${workout.type === "Cardio" ? "bg-primary/10" :
+                          workout.type === "Strength" ? "bg-chart-2/10" :
+                            "bg-chart-3/10"
+                          }`}>
                           {workout.type === "Cardio" ? (
                             <Heart className="h-5 w-5 text-primary" />
                           ) : workout.type === "Strength" ? (
@@ -1202,13 +1200,13 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                       <p className="text-xs text-muted-foreground">{workout.date}</p>
                     </div>
                   ))}
-                  
+
                   <Button variant="outline" className="w-full">
                     View All History
                   </Button>
                 </CardContent>
               </Card>
-              
+
               <Card>
                 <CardHeader>
                   <CardTitle>Exercise Library</CardTitle>
@@ -1219,8 +1217,8 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-2 gap-2">
                     <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                      <Button 
-                        variant={selectedCategory === "Strength" ? "default" : "outline"} 
+                      <Button
+                        variant={selectedCategory === "Strength" ? "default" : "outline"}
                         className="justify-start w-full"
                         onClick={() => handleCategorySelect("Strength")}
                       >
@@ -1229,8 +1227,8 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                       </Button>
                     </motion.div>
                     <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                      <Button 
-                        variant={selectedCategory === "Cardio" ? "default" : "outline"} 
+                      <Button
+                        variant={selectedCategory === "Cardio" ? "default" : "outline"}
                         className="justify-start w-full"
                         onClick={() => handleCategorySelect("Cardio")}
                       >
@@ -1239,8 +1237,8 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                       </Button>
                     </motion.div>
                     <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                      <Button 
-                        variant={selectedCategory === "Flexibility" ? "default" : "outline"} 
+                      <Button
+                        variant={selectedCategory === "Flexibility" ? "default" : "outline"}
                         className="justify-start w-full"
                         onClick={() => handleCategorySelect("Flexibility")}
                       >
@@ -1249,8 +1247,8 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                       </Button>
                     </motion.div>
                     <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                      <Button 
-                        variant={selectedCategory === "HIIT" ? "default" : "outline"} 
+                      <Button
+                        variant={selectedCategory === "HIIT" ? "default" : "outline"}
                         className="justify-start w-full"
                         onClick={() => handleCategorySelect("HIIT")}
                       >
@@ -1259,9 +1257,9 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                       </Button>
                     </motion.div>
                   </div>
-                  
+
                   {!viewAllExercises && (
-                    <motion.div 
+                    <motion.div
                       className="space-y-2"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
@@ -1269,20 +1267,20 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                     >
                       <div className="flex items-center justify-between">
                         <h3 className="text-sm font-medium">Popular Exercises</h3>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
+                        <Button
+                          variant="ghost"
+                          size="sm"
                           className="h-8 gap-1"
                           onClick={toggleViewAllExercises}
                         >
                           View All <ChevronRight className="h-3 w-3" />
                         </Button>
                       </div>
-                      
+
                       <div className="space-y-2">
                         {exerciseLibrary.slice(0, 4).map((exercise) => (
-                          <motion.div 
-                            key={exercise.id} 
+                          <motion.div
+                            key={exercise.id}
                             className="flex items-center justify-between p-2 rounded-md hover:bg-accent cursor-pointer"
                             whileHover={{ scale: 1.02, backgroundColor: "hsl(var(--accent))" }}
                             onClick={() => handleExerciseSelect(exercise)}
@@ -1301,9 +1299,9 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                             <TooltipProvider>
                               <Tooltip>
                                 <TooltipTrigger asChild>
-                                  <Button 
-                                    variant="ghost" 
-                                    size="sm" 
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
                                     className="h-8"
                                     onClick={(e) => {
                                       e.stopPropagation();
@@ -1323,9 +1321,9 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                       </div>
                     </motion.div>
                   )}
-                  
+
                   {viewAllExercises && (
-                    <motion.div 
+                    <motion.div
                       className="space-y-4"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
@@ -1340,20 +1338,20 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                             {filteredExercises.length} exercises
                           </Badge>
                         </div>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
+                        <Button
+                          variant="ghost"
+                          size="sm"
                           className="h-8"
                           onClick={toggleViewAllExercises}
                         >
                           Back
                         </Button>
                       </div>
-                      
+
                       <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2 scrollbar-thin">
                         {filteredExercises.map((exercise) => (
-                          <motion.div 
-                            key={exercise.id} 
+                          <motion.div
+                            key={exercise.id}
                             className="flex items-center justify-between p-2 rounded-md hover:bg-accent cursor-pointer"
                             whileHover={{ scale: 1.02, backgroundColor: "hsl(var(--accent))" }}
                             onClick={() => handleExerciseSelect(exercise)}
@@ -1368,13 +1366,12 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                                 <span className="mx-1">•</span>
                                 <span>{exercise.muscle}</span>
                                 <span className="mx-1">•</span>
-                                <Badge 
-                                  variant="outline" 
-                                  className={`text-xs ${
-                                    exercise.difficulty === "Beginner" ? "bg-green-500/10 text-green-500" : 
-                                    exercise.difficulty === "Intermediate" ? "bg-yellow-500/10 text-yellow-500" : 
-                                    "bg-red-500/10 text-red-500"
-                                  }`}
+                                <Badge
+                                  variant="outline"
+                                  className={`text-xs ${exercise.difficulty === "Beginner" ? "bg-green-500/10 text-green-500" :
+                                    exercise.difficulty === "Intermediate" ? "bg-yellow-500/10 text-yellow-500" :
+                                      "bg-red-500/10 text-red-500"
+                                    }`}
                                 >
                                   {exercise.difficulty}
                                 </Badge>
@@ -1383,9 +1380,9 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                             <TooltipProvider>
                               <Tooltip>
                                 <TooltipTrigger asChild>
-                                  <Button 
-                                    variant="ghost" 
-                                    size="sm" 
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
                                     className="h-8"
                                     onClick={(e) => {
                                       e.stopPropagation();
@@ -1407,7 +1404,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                   )}
                 </CardContent>
               </Card>
-              
+
               {/* Exercise Details Dialog */}
               <Dialog open={showExerciseDetails} onOpenChange={setShowExerciseDetails}>
                 <DialogContent className="sm:max-w-[500px]">
@@ -1417,9 +1414,9 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                       Detailed information about this exercise
                     </DialogDescription>
                   </DialogHeader>
-                  
+
                   {selectedExercise && (
-                    <motion.div 
+                    <motion.div
                       className="space-y-4"
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -1440,19 +1437,18 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                         </div>
                         <div className="space-y-1">
                           <p className="text-sm font-medium">Difficulty</p>
-                          <Badge 
-                            variant="outline" 
-                            className={`${
-                              selectedExercise.difficulty === "Beginner" ? "bg-green-500/10 text-green-500" : 
-                              selectedExercise.difficulty === "Intermediate" ? "bg-yellow-500/10 text-yellow-500" : 
-                              "bg-red-500/10 text-red-500"
-                            }`}
+                          <Badge
+                            variant="outline"
+                            className={`${selectedExercise.difficulty === "Beginner" ? "bg-green-500/10 text-green-500" :
+                              selectedExercise.difficulty === "Intermediate" ? "bg-yellow-500/10 text-yellow-500" :
+                                "bg-red-500/10 text-red-500"
+                              }`}
                           >
                             {selectedExercise.difficulty}
                           </Badge>
                         </div>
                       </div>
-                      
+
                       <div className="space-y-2">
                         <p className="text-sm font-medium">Description</p>
                         <p className="text-sm text-muted-foreground">
@@ -1460,25 +1456,25 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                           ${selectedExercise.equipment !== "None" ? ` This exercise requires ${selectedExercise.equipment.toLowerCase()}.` : ''}`}
                         </p>
                       </div>
-                      
+
                       <div className="space-y-2">
                         <p className="text-sm font-medium">Recommended</p>
                         <div className="flex flex-wrap gap-2">
                           <Badge className="bg-primary/10">
-                            {selectedExercise.difficulty === "Beginner" ? "3 sets" : 
-                             selectedExercise.difficulty === "Intermediate" ? "4 sets" : "5 sets"}
+                            {selectedExercise.difficulty === "Beginner" ? "3 sets" :
+                              selectedExercise.difficulty === "Intermediate" ? "4 sets" : "5 sets"}
                           </Badge>
                           <Badge className="bg-primary/10">
-                            {selectedExercise.difficulty === "Beginner" ? "10-12 reps" : 
-                             selectedExercise.difficulty === "Intermediate" ? "8-10 reps" : "6-8 reps"}
+                            {selectedExercise.difficulty === "Beginner" ? "10-12 reps" :
+                              selectedExercise.difficulty === "Intermediate" ? "8-10 reps" : "6-8 reps"}
                           </Badge>
                           <Badge className="bg-primary/10">
-                            {selectedExercise.difficulty === "Beginner" ? "60 sec rest" : 
-                             selectedExercise.difficulty === "Intermediate" ? "90 sec rest" : "120 sec rest"}
+                            {selectedExercise.difficulty === "Beginner" ? "60 sec rest" :
+                              selectedExercise.difficulty === "Intermediate" ? "90 sec rest" : "120 sec rest"}
                           </Badge>
                         </div>
                       </div>
-                      
+
                       <div className="space-y-2">
                         <p className="text-sm font-medium">Tips</p>
                         <ul className="text-sm text-muted-foreground list-disc pl-5 space-y-1">
@@ -1493,7 +1489,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                       </div>
                     </motion.div>
                   )}
-                  
+
                   <DialogFooter className="flex justify-between">
                     <Button variant="outline" onClick={closeExerciseDetails}>
                       Close
@@ -1510,7 +1506,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
             </div>
           </div>
         </TabsContent>
-        
+
         <TabsContent value="nutrition">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-6">
@@ -1536,7 +1532,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                         </div>
                       </CardContent>
                     </Card>
-                    
+
                     <Card>
                       <CardContent className="p-4">
                         <div className="flex flex-col items-center text-center">
@@ -1550,7 +1546,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                         </div>
                       </CardContent>
                     </Card>
-                    
+
                     <Card>
                       <CardContent className="p-4">
                         <div className="flex flex-col items-center text-center">
@@ -1564,7 +1560,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                         </div>
                       </CardContent>
                     </Card>
-                    
+
                     <Card>
                       <CardContent className="p-4">
                         <div className="flex flex-col items-center text-center">
@@ -1579,7 +1575,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                       </CardContent>
                     </Card>
                   </div>
-                  
+
                   <div className="h-64">
                     <ResponsiveContainer width="100%" height="100%">
                       <RechartsBarChart
@@ -1594,8 +1590,8 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                         <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                         <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" />
                         <YAxis stroke="hsl(var(--muted-foreground))" />
-                        <RechartsTooltip 
-                          contentStyle={{ 
+                        <RechartsTooltip
+                          contentStyle={{
                             backgroundColor: "hsl(var(--card))",
                             borderColor: "hsl(var(--border))",
                             borderRadius: "var(--radius)",
@@ -1611,7 +1607,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                   </div>
                 </CardContent>
               </Card>
-              
+
               <Card>
                 <CardHeader>
                   <CardTitle>Log Meal</CardTitle>
@@ -1635,38 +1631,38 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                         </SelectContent>
                       </Select>
                     </div>
-                    
+
                     <div className="space-y-2">
                       <Label htmlFor="food-name">Food Name</Label>
                       <Input id="food-name" placeholder="e.g., Grilled Chicken Salad" />
                     </div>
-                    
+
                     <div className="space-y-2">
                       <Label htmlFor="food-calories">Calories</Label>
                       <Input id="food-calories" type="number" min="0" defaultValue="350" />
                     </div>
-                    
+
                     <div className="space-y-2">
                       <Label htmlFor="food-protein">Protein (g)</Label>
                       <Input id="food-protein" type="number" min="0" defaultValue="25" />
                     </div>
-                    
+
                     <div className="space-y-2">
                       <Label htmlFor="food-carbs">Carbs (g)</Label>
                       <Input id="food-carbs" type="number" min="0" defaultValue="30" />
                     </div>
-                    
+
                     <div className="space-y-2">
                       <Label htmlFor="food-fat">Fat (g)</Label>
                       <Input id="food-fat" type="number" min="0" defaultValue="15" />
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center space-x-2">
                     <Checkbox id="favorite-food" />
                     <Label htmlFor="favorite-food">Save to favorites for quick logging</Label>
                   </div>
-                  
+
                   <div className="flex justify-end space-x-2">
                     <Button variant="outline">Cancel</Button>
                     <Button>Save Meal</Button>
@@ -1674,7 +1670,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                 </CardContent>
               </Card>
             </div>
-            
+
             <div className="space-y-6">
               <Card>
                 <CardHeader>
@@ -1710,14 +1706,14 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                       </div>
                     </div>
                   ))}
-                  
+
                   <Button className="w-full">
                     <Plus className="mr-2 h-4 w-4" />
                     Add Meal
                   </Button>
                 </CardContent>
               </Card>
-              
+
               <Card>
                 <CardHeader>
                   <CardTitle>Water Intake</CardTitle>
@@ -1736,21 +1732,20 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                       <p className="text-xl font-medium">{waterGoal} cups</p>
                     </div>
                   </div>
-                  
+
                   <div className="grid grid-cols-8 gap-2">
                     {Array.from({ length: waterGoal }).map((_, i) => (
                       <button
                         key={i}
-                        className={`h-10 flex items-center justify-center rounded-md ${
-                          i < waterIntake ? "bg-chart-2/20 text-chart-2" : "bg-muted text-muted-foreground"
-                        }`}
+                        className={`h-10 flex items-center justify-center rounded-md ${i < waterIntake ? "bg-chart-2/20 text-chart-2" : "bg-muted text-muted-foreground"
+                          }`}
                         onClick={() => setWaterIntake(i + 1)}
                       >
                         💧
                       </button>
                     ))}
                   </div>
-                  
+
                   <div className="flex justify-between">
                     <Button variant="outline" size="sm" onClick={() => setWaterIntake(Math.max(0, waterIntake - 1))}>
                       -1 Cup
@@ -1761,7 +1756,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                   </div>
                 </CardContent>
               </Card>
-              
+
               <Card>
                 <CardHeader>
                   <CardTitle>Nutrition Tips</CardTitle>
@@ -1779,7 +1774,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                         </p>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-start gap-3">
                       <div className="h-8 w-8 rounded-full bg-chart-2/10 flex items-center justify-center flex-shrink-0">
                         <Utensils className="h-4 w-4 text-chart-2" />
@@ -1791,7 +1786,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                         </p>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-start gap-3">
                       <div className="h-8 w-8 rounded-full bg-chart-3/10 flex items-center justify-center flex-shrink-0">
                         <Utensils className="h-4 w-4 text-chart-3" />
@@ -1804,7 +1799,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                       </div>
                     </div>
                   </div>
-                  
+
                   <Button variant="outline" className="w-full" onClick={handleAIRecommendations}>
                     Get Personalized Tips
                   </Button>
@@ -1813,7 +1808,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
             </div>
           </div>
         </TabsContent>
-        
+
         <TabsContent value="progress">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-6">
@@ -1853,30 +1848,30 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                         <XAxis dataKey="date" stroke="hsl(var(--muted-foreground))" />
                         <YAxis yAxisId="left" stroke="hsl(var(--primary))" />
                         <YAxis yAxisId="right" orientation="right" stroke="hsl(var(--chart-2))" />
-                        <RechartsTooltip 
-                          contentStyle={{ 
+                        <RechartsTooltip
+                          contentStyle={{
                             backgroundColor: "hsl(var(--card))",
                             borderColor: "hsl(var(--border))",
                             borderRadius: "var(--radius)",
                           }}
                         />
                         <Legend />
-                        <Line 
+                        <Line
                           yAxisId="left"
-                          type="monotone" 
-                          dataKey="weight" 
+                          type="monotone"
+                          dataKey="weight"
                           name="Weight (lbs)"
-                          stroke="hsl(var(--primary))" 
+                          stroke="hsl(var(--primary))"
                           strokeWidth={2}
                           dot={{ r: 4 }}
                           activeDot={{ r: 6 }}
                         />
-                        <Line 
+                        <Line
                           yAxisId="right"
-                          type="monotone" 
-                          dataKey="steps" 
+                          type="monotone"
+                          dataKey="steps"
                           name="Avg. Daily Steps"
-                          stroke="hsl(var(--chart-2))" 
+                          stroke="hsl(var(--chart-2))"
                           strokeWidth={2}
                           dot={{ r: 4 }}
                           activeDot={{ r: 6 }}
@@ -1886,7 +1881,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                   </div>
                 </CardContent>
               </Card>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card>
                   <CardHeader>
@@ -1904,7 +1899,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                           <span>lbs</span>
                         </div>
                       </div>
-                      
+
                       <div className="space-y-2">
                         <Label>Body Fat %</Label>
                         <div className="flex items-center">
@@ -1912,7 +1907,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                           <span>%</span>
                         </div>
                       </div>
-                      
+
                       <div className="space-y-2">
                         <Label>Chest</Label>
                         <div className="flex items-center">
@@ -1920,7 +1915,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                           <span>in</span>
                         </div>
                       </div>
-                      
+
                       <div className="space-y-2">
                         <Label>Waist</Label>
                         <div className="flex items-center">
@@ -1928,7 +1923,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                           <span>in</span>
                         </div>
                       </div>
-                      
+
                       <div className="space-y-2">
                         <Label>Hips</Label>
                         <div className="flex items-center">
@@ -1936,7 +1931,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                           <span>in</span>
                         </div>
                       </div>
-                      
+
                       <div className="space-y-2">
                         <Label>Thighs</Label>
                         <div className="flex items-center">
@@ -1945,13 +1940,13 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                         </div>
                       </div>
                     </div>
-                    
+
                     <Button className="w-full">
                       Save Measurements
                     </Button>
                   </CardContent>
                 </Card>
-                
+
                 <Card>
                   <CardHeader>
                     <CardTitle>Progress Photos</CardTitle>
@@ -1971,18 +1966,18 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                         <Camera className="h-8 w-8 text-muted-foreground" />
                       </div>
                     </div>
-                    
+
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Front</span>
                       <span className="text-muted-foreground">Side</span>
                       <span className="text-muted-foreground">Back</span>
                     </div>
-                    
+
                     <div className="space-y-2">
                       <Label>Date</Label>
                       <Input type="date" />
                     </div>
-                    
+
                     <Button className="w-full">
                       <Camera className="mr-2 h-4 w-4" />
                       Add New Photos
@@ -1991,7 +1986,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                 </Card>
               </div>
             </div>
-            
+
             <div className="space-y-6">
               <Card>
                 <CardHeader>
@@ -2012,7 +2007,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                         {(weight - weightGoal).toFixed(1)} lbs to go
                       </p>
                     </div>
-                    
+
                     <div className="space-y-2">
                       <div className="flex justify-between">
                         <Label>Daily Steps</Label>
@@ -2023,7 +2018,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                         {stepGoal - stepCount} steps to go today
                       </p>
                     </div>
-                    
+
                     <div className="space-y-2">
                       <div className="flex justify-between">
                         <Label>Weekly Workouts</Label>
@@ -2034,7 +2029,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                         2 more workouts this week
                       </p>
                     </div>
-                    
+
                     <div className="space-y-2">
                       <div className="flex justify-between">
                         <Label>Body Fat %</Label>
@@ -2046,14 +2041,14 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                       </p>
                     </div>
                   </div>
-                  
+
                   <Button className="w-full">
                     <Plus className="mr-2 h-4 w-4" />
                     Add New Goal
                   </Button>
                 </CardContent>
               </Card>
-              
+
               <Card>
                 <CardHeader>
                   <CardTitle>Achievements</CardTitle>
@@ -2074,7 +2069,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                         </p>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center gap-3">
                       <div className="h-10 w-10 rounded-full bg-chart-2/10 flex items-center justify-center flex-shrink-0">
                         <Activity className="h-5 w-5 text-chart-2" />
@@ -2086,7 +2081,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                         </p>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center gap-3">
                       <div className="h-10 w-10 rounded-full bg-chart-3/10 flex items-center justify-center flex-shrink-0">
                         <Dumbbell className="h-5 w-5 text-chart-3" />
@@ -2098,7 +2093,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                         </p>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center gap-3">
                       <div className="h-10 w-10 rounded-full bg-chart-4/10 flex items-center justify-center flex-shrink-0">
                         <LineChart className="h-5 w-5 text-chart-4" />
@@ -2111,7 +2106,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                       </div>
                     </div>
                   </div>
-                  
+
                   <Button variant="outline" className="w-full">
                     View All Achievements
                   </Button>
@@ -2121,7 +2116,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
           </div>
         </TabsContent>
       </Tabs>
-      
+
       {/* Timer settings dialog */}
       <Dialog open={showTimerSettings} onOpenChange={setShowTimerSettings}>
         <DialogContent className="sm:max-w-[425px]">
@@ -2131,7 +2126,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
               Customize your workout timer settings
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="grid gap-4 py-4">
             {timerMode === "countdown" && (
               <div className="grid grid-cols-4 items-center gap-4">
@@ -2149,7 +2144,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                 />
               </div>
             )}
-            
+
             {timerMode === "interval" && (
               <>
                 <div className="grid grid-cols-4 items-center gap-4">
@@ -2166,7 +2161,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                     className="col-span-2"
                   />
                 </div>
-                
+
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="rest" className="col-span-2">
                     Rest Period (seconds)
@@ -2181,7 +2176,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                     className="col-span-2"
                   />
                 </div>
-                
+
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="rounds" className="col-span-2">
                     Number of Rounds
@@ -2198,7 +2193,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
                 </div>
               </>
             )}
-            
+
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="calories" className="col-span-2">
                 Calorie Burn Rate (cal/min)
@@ -2214,7 +2209,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
               />
             </div>
           </div>
-          
+
           <DialogFooter>
             <Button onClick={() => setShowTimerSettings(false)}>
               Save Changes
@@ -2222,7 +2217,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      
+
       {/* Timer completed dialog */}
       <Dialog open={timerCompleted} onOpenChange={setTimerCompleted}>
         <DialogContent className="sm:max-w-[425px]">
@@ -2235,16 +2230,16 @@ Could you provide personalized fitness and nutrition recommendations to help me 
               Great job on completing your workout
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="grid gap-4 py-4">
             <div className="bg-muted/50 p-4 rounded-lg">
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm text-muted-foreground">Duration</p>
                   <p className="text-lg font-medium">
-                    {timerMode === "stopwatch" ? formatTime(exerciseTime) : 
-                     timerMode === "countdown" ? formatTime(countdownTime) : 
-                     formatTime(intervalRounds * (intervalWork + intervalRest))}
+                    {timerMode === "stopwatch" ? formatTime(exerciseTime) :
+                      timerMode === "countdown" ? formatTime(countdownTime) :
+                        formatTime(intervalRounds * (intervalWork + intervalRest))}
                   </p>
                 </div>
                 <div>
@@ -2266,7 +2261,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
               </div>
             </div>
           </div>
-          
+
           <DialogFooter>
             <Button variant="outline" onClick={() => setTimerCompleted(false)}>
               Close
@@ -2277,7 +2272,7 @@ Could you provide personalized fitness and nutrition recommendations to help me 
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      
+
       {/* Hidden audio element for timer sounds */}
       <audio ref={audioRef} src="/sounds/timer-beep.mp3" />
     </div>

@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Patient Report Analysis | EcoMed AI',
+  title: 'Patient Report Analysis | VaidyaSetu',
   description: 'Upload and analyze your medical reports with AI-powered insights and interactive visualizations',
 };
 

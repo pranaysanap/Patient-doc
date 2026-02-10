@@ -26,11 +26,11 @@ export function LearningCenterHeader() {
           <div>
             <h1 className="text-3xl font-bold">AI Learning Center</h1>
             <p className="text-muted-foreground">
-              Understand how EchoMed's AI technology works
+              Understand how VaidyaSetu's AI technology works
             </p>
           </div>
         </motion.div>
-        
+
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -44,7 +44,7 @@ export function LearningCenterHeader() {
           />
         </motion.div>
       </div>
-      
+
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -59,7 +59,7 @@ export function LearningCenterHeader() {
           </TabsList>
         </Tabs>
       </motion.div>
-      
+
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -72,10 +72,10 @@ export function LearningCenterHeader() {
                 <BookOpen className="h-8 w-8 text-primary" />
               </div>
               <div className="text-center md:text-left md:flex-1">
-                <h2 className="text-xl font-semibold mb-2">Welcome to the EchoMed Learning Center</h2>
+                <h2 className="text-xl font-semibold mb-2">Welcome to the VaidyaSetu Learning Center</h2>
                 <p className="text-muted-foreground">
-                  Explore how our AI technology works, understand the science behind heart and lung sound analysis, 
-                  and learn how to get the most accurate results from your EchoMed device.
+                  Explore how our AI technology works, understand the science behind heart and lung sound analysis,
+                  and learn how to get the most accurate results from your VaidyaSetu device.
                 </p>
               </div>
             </div>

@@ -8,16 +8,16 @@ import { Brain, Wand2, Database, Shield } from "lucide-react";
 
 export function AIExplanationSection() {
   const [activeTab, setActiveTab] = useState("how-it-works");
-  
+
   return (
     <section>
       <div className="text-center mb-8">
         <h2 className="text-3xl font-bold mb-2">Understanding Our AI Technology</h2>
         <p className="text-muted-foreground max-w-3xl mx-auto">
-          Learn how EchoMed's artificial intelligence transforms your smartphone into a powerful diagnostic tool
+          Learn how VaidyaSetu's artificial intelligence transforms your smartphone into a powerful diagnostic tool
         </p>
       </div>
-      
+
       <Tabs defaultValue="how-it-works" value={activeTab} onValueChange={setActiveTab}>
         <div className="flex justify-center mb-8">
           <TabsList className="grid grid-cols-4 w-full max-w-2xl">
@@ -27,7 +27,7 @@ export function AIExplanationSection() {
             <TabsTrigger value="privacy">Privacy & Ethics</TabsTrigger>
           </TabsList>
         </div>
-        
+
         <TabsContent value="how-it-works">
           <motion.div
             key="how-it-works"
@@ -44,15 +44,15 @@ export function AIExplanationSection() {
                       <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
                         <Brain className="h-4 w-4 text-primary" />
                       </div>
-                      <h3 className="text-xl font-semibold">How EchoMed's AI Works</h3>
+                      <h3 className="text-xl font-semibold">How VaidyaSetu's AI Works</h3>
                     </div>
-                    
+
                     <div className="space-y-4">
                       <p>
-                        EchoMed uses advanced deep learning neural networks to analyze acoustic patterns in heart and lung sounds. 
+                        VaidyaSetu uses advanced deep learning neural networks to analyze acoustic patterns in heart and lung sounds.
                         The process works in several stages:
                       </p>
-                      
+
                       <ol className="space-y-2 list-decimal list-inside">
                         <li className="text-sm">
                           <span className="font-medium">Sound Capture:</span> Your smartphone's microphone records heart or lung sounds.
@@ -70,13 +70,13 @@ export function AIExplanationSection() {
                           <span className="font-medium">Diagnostic Assessment:</span> The AI generates results with confidence scores and recommendations.
                         </li>
                       </ol>
-                      
+
                       <p className="text-sm text-muted-foreground">
                         This entire process happens in seconds, providing you with clinical-grade analysis without specialized equipment.
                       </p>
                     </div>
                   </div>
-                  
+
                   <div className="relative h-64 bg-muted rounded-lg overflow-hidden">
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="relative w-full h-full">
@@ -98,7 +98,7 @@ export function AIExplanationSection() {
                             />
                           ))}
                         </div>
-                        
+
                         {/* Hidden layer 1 */}
                         <div className="absolute left-[30%] top-0 bottom-0 flex flex-col justify-around">
                           {[0, 1, 2, 3, 4, 5, 6].map((i) => (
@@ -117,7 +117,7 @@ export function AIExplanationSection() {
                             />
                           ))}
                         </div>
-                        
+
                         {/* Hidden layer 2 */}
                         <div className="absolute left-[50%] top-0 bottom-0 flex flex-col justify-around">
                           {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
@@ -136,7 +136,7 @@ export function AIExplanationSection() {
                             />
                           ))}
                         </div>
-                        
+
                         {/* Hidden layer 3 */}
                         <div className="absolute left-[70%] top-0 bottom-0 flex flex-col justify-around">
                           {[0, 1, 2, 3, 4, 5].map((i) => (
@@ -155,7 +155,7 @@ export function AIExplanationSection() {
                             />
                           ))}
                         </div>
-                        
+
                         {/* Output layer */}
                         <div className="absolute left-[90%] top-0 bottom-0 flex flex-col justify-around">
                           {[0, 1, 2].map((i) => (
@@ -174,7 +174,7 @@ export function AIExplanationSection() {
                             />
                           ))}
                         </div>
-                        
+
                         {/* Connection lines would be added here in a real implementation */}
                       </div>
                     </div>
@@ -184,7 +184,7 @@ export function AIExplanationSection() {
             </Card>
           </motion.div>
         </TabsContent>
-        
+
         <TabsContent value="training">
           <motion.div
             key="training"
@@ -203,13 +203,13 @@ export function AIExplanationSection() {
                       </div>
                       <h3 className="text-xl font-semibold">How Our AI Is Trained</h3>
                     </div>
-                    
+
                     <div className="space-y-4">
                       <p>
-                        EchoMed's AI models are trained on one of the world's largest datasets of heart and lung sounds, 
+                        VaidyaSetu's AI models are trained on one of the world's largest datasets of heart and lung sounds,
                         ensuring accuracy across diverse populations and conditions:
                       </p>
-                      
+
                       <ul className="space-y-2 list-disc list-inside">
                         <li className="text-sm">
                           <span className="font-medium">Diverse Dataset:</span> Over 2 million annotated recordings from patients of all ages, genders, and ethnicities.
@@ -227,13 +227,13 @@ export function AIExplanationSection() {
                           <span className="font-medium">Multi-condition Recognition:</span> Trained to identify over 40 different heart and lung conditions.
                         </li>
                       </ul>
-                      
+
                       <p className="text-sm text-muted-foreground">
-                        This extensive training process ensures that EchoMed can provide reliable analysis across a wide range of health conditions.
+                        This extensive training process ensures that VaidyaSetu can provide reliable analysis across a wide range of health conditions.
                       </p>
                     </div>
                   </div>
-                  
+
                   <div className="h-64 bg-muted rounded-lg overflow-hidden">
                     <div className="w-full h-full bg-[url('https://images.unsplash.com/photo-1581093458791-9f3c3ae93234?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')] bg-cover bg-center opacity-50" />
                   </div>
@@ -242,7 +242,7 @@ export function AIExplanationSection() {
             </Card>
           </motion.div>
         </TabsContent>
-        
+
         <TabsContent value="data">
           <motion.div
             key="data"
@@ -259,14 +259,14 @@ export function AIExplanationSection() {
                       <div className="h-8 w-8 rounded-full bg-chart-3/10 flex items-center justify-center">
                         <Database className="h-4 w-4 text-chart-3" />
                       </div>
-                      <h3 className="text-xl font-semibold">Data Science Behind EchoMed</h3>
+                      <h3 className="text-xl font-semibold">Data Science Behind VaidyaSetu</h3>
                     </div>
-                    
+
                     <div className="space-y-4">
                       <p>
-                        The data science powering EchoMed involves sophisticated algorithms and statistical methods:
+                        The data science powering VaidyaSetu involves sophisticated algorithms and statistical methods:
                       </p>
-                      
+
                       <ul className="space-y-2 list-disc list-inside">
                         <li className="text-sm">
                           <span className="font-medium">Signal Processing:</span> Advanced techniques to clean and enhance acoustic signals.
@@ -284,13 +284,13 @@ export function AIExplanationSection() {
                           <span className="font-medium">Ensemble Methods:</span> Multiple models working together to improve accuracy and reduce bias.
                         </li>
                       </ul>
-                      
+
                       <p className="text-sm text-muted-foreground">
                         Our team of data scientists and medical experts continuously refine these algorithms to ensure the highest possible accuracy.
                       </p>
                     </div>
                   </div>
-                  
+
                   <div className="h-64 bg-muted rounded-lg overflow-hidden">
                     <div className="w-full h-full bg-[url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')] bg-cover bg-center opacity-50" />
                   </div>
@@ -299,7 +299,7 @@ export function AIExplanationSection() {
             </Card>
           </motion.div>
         </TabsContent>
-        
+
         <TabsContent value="privacy">
           <motion.div
             key="privacy"
@@ -318,12 +318,12 @@ export function AIExplanationSection() {
                       </div>
                       <h3 className="text-xl font-semibold">Privacy & Ethical AI</h3>
                     </div>
-                    
+
                     <div className="space-y-4">
                       <p>
-                        At EchoMed, we prioritize privacy and ethical considerations in our AI development:
+                        At VaidyaSetu, we prioritize privacy and ethical considerations in our AI development:
                       </p>
-                      
+
                       <ul className="space-y-2 list-disc list-inside">
                         <li className="text-sm">
                           <span className="font-medium">Data Encryption:</span> All health data is encrypted end-to-end using military-grade encryption.
@@ -341,13 +341,13 @@ export function AIExplanationSection() {
                           <span className="font-medium">Transparency:</span> Clear explanations of how AI reaches its conclusions and confidence levels.
                         </li>
                       </ul>
-                      
+
                       <p className="text-sm text-muted-foreground">
                         We adhere to HIPAA, GDPR, and other global privacy regulations, and our ethical AI framework is reviewed by independent experts.
                       </p>
                     </div>
                   </div>
-                  
+
                   <div className="h-64 bg-muted rounded-lg overflow-hidden">
                     <div className="w-full h-full bg-[url('https://images.unsplash.com/photo-1633265486064-086b219458ec?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')] bg-cover bg-center opacity-50" />
                   </div>

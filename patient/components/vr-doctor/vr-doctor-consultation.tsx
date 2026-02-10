@@ -89,15 +89,15 @@ export default function VRDoctorConsultation() {
         recognition.current.continuous = true;
         recognition.current.interimResults = true;
         recognition.current.lang = 'en-US';
-        
+
         // Set a longer timeout for speech detection
         recognition.current.speechRecognitionTimeout = 10000; // 10 seconds
-        
+
         recognition.current.onstart = () => {
           setIsListening(true);
           toast.success("Voice input started - Please describe how you're feeling");
         };
-        
+
         recognition.current.onend = () => {
           // If we're still marked as listening when onend fires, 
           // it means it ended unexpectedly, so try to restart
@@ -112,16 +112,16 @@ export default function VRDoctorConsultation() {
             setIsListening(false);
           }
         };
-        
+
         recognition.current.onerror = (event: any) => {
           console.error('Speech recognition error:', event.error);
-          
+
           // Handle specific error cases
           switch (event.error) {
             case 'no-speech':
               // Show a gentle reminder instead of an error
               toast.info("I didn't catch that. Please try speaking again or type your message.");
-              
+
               // Don't stop listening, just restart after a short delay
               setTimeout(() => {
                 try {
@@ -133,7 +133,7 @@ export default function VRDoctorConsultation() {
                 }
               }, 100);
               return;
-              
+
             case 'audio-capture':
               toast.error("No microphone detected. Please check your microphone connection.");
               break;
@@ -143,14 +143,14 @@ export default function VRDoctorConsultation() {
             default:
               toast.error("Voice input error: " + event.error);
           }
-          
+
           setIsListening(false);
         };
-        
+
         recognition.current.onresult = (event: any) => {
           let finalTranscript = '';
           let interimTranscript = '';
-          
+
           for (let i = event.resultIndex; i < event.results.length; i++) {
             const transcript = event.results[i][0].transcript;
             if (event.results[i].isFinal) {
@@ -159,7 +159,7 @@ export default function VRDoctorConsultation() {
               interimTranscript += transcript;
             }
           }
-          
+
           // Update input value with both final and interim results
           setUserInput(prevValue => {
             const newValue = finalTranscript || interimTranscript;
@@ -195,7 +195,7 @@ export default function VRDoctorConsultation() {
       try {
         recognition.current?.stop();
         setIsListening(false);
-        
+
         // If there's input, process it
         if (userInput.trim()) {
           processUserInput(userInput);
@@ -230,15 +230,15 @@ export default function VRDoctorConsultation() {
   // Process user's voice input
   const processUserInput = async (input: string) => {
     if (!input.trim()) return;
-    
+
     setIsTyping(true);
     setUserInput('');
-    
+
     // Simulate AI processing with delay
     setTimeout(() => {
       // Generate doctor response based on input
       let response = '';
-      
+
       // Simple keyword matching for demo purposes
       if (input.toLowerCase().includes('headache')) {
         response = "I notice you're experiencing headaches. How long have you been feeling this way? Is it accompanied by any other symptoms like nausea or sensitivity to light? Based on your posture, I can see some tension in your neck which could be contributing to this.";
@@ -256,15 +256,15 @@ export default function VRDoctorConsultation() {
       } else {
         response = "Thank you for sharing that information. Based on what you've told me and what I can observe, I'd like to ask a few more questions to better understand your condition. Could you elaborate on when these symptoms started and if anything makes them better or worse?";
       }
-      
+
       setDoctorResponse(response);
       setIsTyping(false);
-      
+
       // Speak the response if text-to-speech is enabled
       if (textToSpeechEnabled) {
         setIsSpeaking(true);
         SpeechService.speakLongText(response);
-        
+
         // Setup a check to detect when speech has finished
         const checkSpeakingStatus = setInterval(() => {
           if (!SpeechService.isSpeechSynthesisActive()) {
@@ -273,7 +273,7 @@ export default function VRDoctorConsultation() {
           }
         }, 500); // Check every half second
       }
-      
+
       // Randomize some health metrics to simulate real-time monitoring
       simulateVitalSigns();
     }, 1500);
@@ -289,28 +289,28 @@ export default function VRDoctorConsultation() {
           facingMode: "user"
         }
       };
-      
+
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
-      
+
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         setCameraActive(true);
         setConnectionStatus('connecting');
-        
+
         // Simulate connection process
         setTimeout(() => {
           setConnectionStatus('connected');
           toast.success("Virtual doctor connected");
-          
+
           // Start initial greeting after connection
           setTimeout(() => {
             const greeting = "Hello, I'm Dr. AI. I'll be your virtual doctor today. I can see and hear you now. How are you feeling today?";
             setDoctorResponse(greeting);
-            
+
             if (textToSpeechEnabled) {
               setIsSpeaking(true);
               SpeechService.speakLongText(greeting);
-              
+
               // Setup a check to detect when speech has finished
               const checkSpeakingStatus = setInterval(() => {
                 if (!SpeechService.isSpeechSynthesisActive()) {
@@ -319,7 +319,7 @@ export default function VRDoctorConsultation() {
                 }
               }, 500); // Check every half second
             }
-            
+
             // Start posture analysis
             startPostureAnalysis();
           }, 1000);
@@ -336,11 +336,11 @@ export default function VRDoctorConsultation() {
     if (videoRef.current && videoRef.current.srcObject) {
       const stream = videoRef.current.srcObject as MediaStream;
       const tracks = stream.getTracks();
-      
+
       tracks.forEach(track => {
         track.stop();
       });
-      
+
       videoRef.current.srcObject = null;
       setCameraActive(false);
       setConnectionStatus('disconnected');
@@ -378,7 +378,7 @@ export default function VRDoctorConsultation() {
     const systolic = 115 + Math.floor(Math.random() * 15);
     const diastolic = 75 + Math.floor(Math.random() * 15);
     const oxygenLevel = 95 + Math.floor(Math.random() * 5);
-    
+
     setHealthMetrics(prev => ({
       ...prev,
       heartRate: heartRate.toString(),
@@ -391,15 +391,15 @@ export default function VRDoctorConsultation() {
   // Posture analysis (simplified simulation)
   const startPostureAnalysis = () => {
     if (!canvasRef.current || !videoRef.current) return;
-    
+
     const ctx = canvasRef.current.getContext('2d');
     if (!ctx) return;
-    
+
     // Simple interval to simulate posture analysis
     const interval = setInterval(() => {
       if (videoRef.current && canvasRef.current) {
         ctx.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
-        
+
         // Simulate posture detection with random feedback occasionally
         if (Math.random() > 0.7) {
           const feedbacks = [
@@ -409,10 +409,10 @@ export default function VRDoctorConsultation() {
             "Your neck is slightly forward. Try bringing your head back aligned with your spine.",
             null // Sometimes no feedback
           ];
-          
+
           const feedback = feedbacks[Math.floor(Math.random() * feedbacks.length)];
           setPostureFeedback(feedback);
-          
+
           if (feedback && feedback.includes("good")) {
             updateHealthMetric('posture', 'Good');
           } else if (feedback) {
@@ -421,7 +421,7 @@ export default function VRDoctorConsultation() {
         }
       }
     }, 5000);
-    
+
     return () => clearInterval(interval);
   };
 
@@ -440,7 +440,7 @@ export default function VRDoctorConsultation() {
   };
 
   return (
-    <div 
+    <div
       ref={containerRef}
       className={cn(
         "relative w-full h-screen bg-black overflow-hidden flex flex-col",
@@ -458,32 +458,32 @@ export default function VRDoctorConsultation() {
             muted
             className="w-full h-full object-cover"
           />
-          <canvas 
-            ref={canvasRef} 
-            className="absolute top-0 left-0 w-full h-full opacity-0" 
-            width={1280} 
+          <canvas
+            ref={canvasRef}
+            className="absolute top-0 left-0 w-full h-full opacity-0"
+            width={1280}
             height={720}
           />
-          
+
           {/* Dark overlay */}
           <div className="absolute inset-0 bg-black/30" />
         </div>
-        
+
         {/* VR Interface Elements */}
         <div className="relative z-10 w-full h-full flex flex-col">
           {/* Top status bar */}
           <div className="flex items-center justify-between p-4 bg-black/50 backdrop-blur-sm">
             <div className="flex items-center space-x-2">
               <Stethoscope className="h-6 w-6 text-cyan-400" />
-              <span className="font-bold text-white">EcoMed VR Doctor</span>
+              <span className="font-bold text-white">VaidyaSetu VR Doctor</span>
             </div>
-            
+
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-1">
                 <Activity className="h-4 w-4 text-green-400" />
                 <span className="text-sm text-white">Session: {formatTime(sessionTime)}</span>
               </div>
-              
+
               <div className="flex space-x-2">
                 <Button
                   size="sm"
@@ -493,7 +493,7 @@ export default function VRDoctorConsultation() {
                 >
                   <Maximize className="h-4 w-4" />
                 </Button>
-                
+
                 <Button
                   size="sm"
                   variant="outline"
@@ -505,13 +505,13 @@ export default function VRDoctorConsultation() {
               </div>
             </div>
           </div>
-          
+
           {/* Main content area */}
           <div className="flex-1 flex">
             {/* Left panel - Health metrics */}
             <div className="w-72 bg-black/60 backdrop-blur-md p-4 text-white flex flex-col">
               <h3 className="text-lg font-semibold mb-4 text-cyan-400">Health Metrics</h3>
-              
+
               <div className="space-y-4">
                 <div>
                   <div className="flex items-center justify-between mb-1">
@@ -525,7 +525,7 @@ export default function VRDoctorConsultation() {
                     <div className="h-full bg-gradient-to-r from-red-500 to-red-400 rounded-full" />
                   </Progress>
                 </div>
-                
+
                 <div>
                   <div className="flex items-center justify-between mb-1">
                     <div className="flex items-center">
@@ -534,14 +534,14 @@ export default function VRDoctorConsultation() {
                     </div>
                     <span className="text-orange-400">{healthMetrics.temperature}°F</span>
                   </div>
-                  <Progress 
-                    value={(parseFloat(healthMetrics.temperature) - 97) / 5 * 100} 
+                  <Progress
+                    value={(parseFloat(healthMetrics.temperature) - 97) / 5 * 100}
                     className="h-1 bg-gray-800"
                   >
                     <div className="h-full bg-gradient-to-r from-orange-500 to-orange-400 rounded-full" />
                   </Progress>
                 </div>
-                
+
                 <div>
                   <div className="flex items-center justify-between mb-1">
                     <div className="flex items-center">
@@ -551,21 +551,21 @@ export default function VRDoctorConsultation() {
                     <span className="text-blue-400">{healthMetrics.bloodPressure}</span>
                   </div>
                   <div className="flex space-x-1">
-                    <Progress 
-                      value={parseInt(healthMetrics.bloodPressure.split('/')[0]) / 2} 
+                    <Progress
+                      value={parseInt(healthMetrics.bloodPressure.split('/')[0]) / 2}
                       className="h-1 bg-gray-800 w-1/2"
                     >
                       <div className="h-full bg-gradient-to-r from-blue-600 to-blue-400 rounded-full" />
                     </Progress>
-                    <Progress 
-                      value={parseInt(healthMetrics.bloodPressure.split('/')[1]) / 1.5} 
+                    <Progress
+                      value={parseInt(healthMetrics.bloodPressure.split('/')[1]) / 1.5}
                       className="h-1 bg-gray-800 w-1/2"
                     >
                       <div className="h-full bg-gradient-to-r from-blue-400 to-blue-300 rounded-full" />
                     </Progress>
                   </div>
                 </div>
-                
+
                 <div>
                   <div className="flex items-center justify-between mb-1">
                     <div className="flex items-center">
@@ -574,59 +574,59 @@ export default function VRDoctorConsultation() {
                     </div>
                     <span className="text-purple-400">{healthMetrics.oxygenLevel}%</span>
                   </div>
-                  <Progress 
-                    value={parseInt(healthMetrics.oxygenLevel)} 
+                  <Progress
+                    value={parseInt(healthMetrics.oxygenLevel)}
                     className="h-1 bg-gray-800"
                   >
                     <div className="h-full bg-gradient-to-r from-purple-500 to-purple-400 rounded-full" />
                   </Progress>
                 </div>
-                
+
                 <div className="mt-6 space-y-2">
                   <div className="flex justify-between items-center">
                     <span>Stress Level:</span>
                     <span className={cn(
                       "px-2 py-0.5 rounded text-xs",
                       healthMetrics.stressLevel === 'Normal' ? "bg-green-900 text-green-300" :
-                      healthMetrics.stressLevel === 'Elevated' ? "bg-yellow-900 text-yellow-300" :
-                      "bg-red-900 text-red-300"
+                        healthMetrics.stressLevel === 'Elevated' ? "bg-yellow-900 text-yellow-300" :
+                          "bg-red-900 text-red-300"
                     )}>
                       {healthMetrics.stressLevel}
                     </span>
                   </div>
-                  
+
                   <div className="flex justify-between items-center">
                     <span>Posture:</span>
                     <span className={cn(
                       "px-2 py-0.5 rounded text-xs",
                       healthMetrics.posture === 'Good' ? "bg-green-900 text-green-300" :
-                      healthMetrics.posture === 'Needs Improvement' ? "bg-yellow-900 text-yellow-300" :
-                      "bg-red-900 text-red-300"
+                        healthMetrics.posture === 'Needs Improvement' ? "bg-yellow-900 text-yellow-300" :
+                          "bg-red-900 text-red-300"
                     )}>
                       {healthMetrics.posture}
                     </span>
                   </div>
                 </div>
               </div>
-              
+
               {/* Connection status */}
               <div className="mt-auto">
                 <div className="flex items-center">
                   <div className={cn(
                     "w-2 h-2 rounded-full mr-2",
                     connectionStatus === 'connected' ? "bg-green-500" :
-                    connectionStatus === 'connecting' ? "bg-yellow-500" :
-                    "bg-red-500"
+                      connectionStatus === 'connecting' ? "bg-yellow-500" :
+                        "bg-red-500"
                   )} />
                   <span className="text-sm">
                     {connectionStatus === 'connected' ? "Connected" :
-                     connectionStatus === 'connecting' ? "Connecting..." :
-                     "Disconnected"}
+                      connectionStatus === 'connecting' ? "Connecting..." :
+                        "Disconnected"}
                   </span>
                 </div>
               </div>
             </div>
-            
+
             {/* Center content - Doctor interaction area */}
             <div className="flex-1 relative flex flex-col">
               {/* Doctor response area */}
@@ -644,11 +644,11 @@ export default function VRDoctorConsultation() {
                       </div>
                       <h2 className="text-2xl font-bold text-white">Virtual Doctor Consultation</h2>
                       <p className="text-gray-300 max-w-md">
-                        Start your virtual doctor appointment for personalized health analysis 
-                        and recommendations. Your camera will be used to analyze your posture 
+                        Start your virtual doctor appointment for personalized health analysis
+                        and recommendations. Your camera will be used to analyze your posture
                         and physical appearance.
                       </p>
-                      <Button 
+                      <Button
                         onClick={startCamera}
                         size="lg"
                         className="bg-cyan-600 hover:bg-cyan-700 text-white"
@@ -671,7 +671,7 @@ export default function VRDoctorConsultation() {
                             <div className="w-10 h-10 rounded-full bg-cyan-600 flex items-center justify-center flex-shrink-0">
                               <Stethoscope className="h-5 w-5 text-white" />
                             </div>
-                            
+
                             <div className="flex-1">
                               <div className="flex items-center">
                                 <h3 className="font-semibold text-cyan-300">Dr. AI</h3>
@@ -694,7 +694,7 @@ export default function VRDoctorConsultation() {
                                   </div>
                                 )}
                               </div>
-                              
+
                               {isTyping ? (
                                 <div className="mt-2 flex space-x-1">
                                   {[1, 2, 3].map(i => (
@@ -715,7 +715,7 @@ export default function VRDoctorConsultation() {
                               ) : (
                                 <p className="text-white mt-2">{doctorResponse}</p>
                               )}
-                              
+
                               {postureFeedback && !isTyping && (
                                 <div className="mt-3 text-sm bg-cyan-900/50 p-2 rounded border-l-2 border-cyan-400">
                                   <p className="text-cyan-200">{postureFeedback}</p>
@@ -729,7 +729,7 @@ export default function VRDoctorConsultation() {
                   </AnimatePresence>
                 )}
               </div>
-              
+
               {/* User input area */}
               {cameraActive && (
                 <div className="bg-black/70 backdrop-blur-md p-4">
@@ -740,14 +740,14 @@ export default function VRDoctorConsultation() {
                       size="icon"
                       className={cn(
                         "rounded-full border-2 transition-colors duration-200",
-                        isListening 
+                        isListening
                           ? "border-red-500 bg-red-500/20 text-red-500 animate-pulse"
                           : "border-cyan-500 bg-transparent text-cyan-500 hover:bg-cyan-500/20"
                       )}
                     >
                       {isListening ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
                     </Button>
-                    
+
                     <div className="flex-1 relative">
                       <input
                         type="text"
@@ -761,7 +761,7 @@ export default function VRDoctorConsultation() {
                           }
                         }}
                       />
-                      
+
                       {isListening && (
                         <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex space-x-0.5">
                           {[1, 2, 3, 4].map(i => (
@@ -781,7 +781,7 @@ export default function VRDoctorConsultation() {
                         </div>
                       )}
                     </div>
-                    
+
                     <Button
                       onClick={toggleTextToSpeech}
                       variant="outline"
@@ -795,7 +795,7 @@ export default function VRDoctorConsultation() {
                     >
                       {textToSpeechEnabled ? <Volume2 className="h-5 w-5" /> : <VolumeX className="h-5 w-5" />}
                     </Button>
-                    
+
                     <Button
                       onClick={() => {
                         if (userInput.trim()) {

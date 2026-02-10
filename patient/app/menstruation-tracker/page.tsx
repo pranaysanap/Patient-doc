@@ -17,14 +17,14 @@ import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
-import { 
-  Calendar as CalendarIcon, 
-  Droplet, 
-  Activity, 
-  Heart, 
-  Smile, 
-  Plus, 
-  ChevronRight, 
+import {
+  Calendar as CalendarIcon,
+  Droplet,
+  Activity,
+  Heart,
+  Smile,
+  Plus,
+  ChevronRight,
   LineChart,
   Bell,
   CalendarDays,
@@ -103,7 +103,7 @@ export default function MenstruationTracker() {
     if (cycleDays.length > 0) {
       const cycles: CycleHistory[] = [];
       let currentCycle: CycleDay[] = [];
-      
+
       cycleDays.forEach((day, index) => {
         if (index > 0 && day.flow === "medium" && cycleDays[index - 1].flow !== "medium") {
           // Process previous cycle
@@ -111,7 +111,7 @@ export default function MenstruationTracker() {
             const cycleStart = currentCycle[0].date;
             const cycleEnd = currentCycle[currentCycle.length - 1].date;
             const length = Math.ceil((cycleEnd.getTime() - cycleStart.getTime()) / (1000 * 60 * 60 * 24));
-            
+
             // Collect all symptoms and make them unique
             const allSymptoms = currentCycle.reduce((acc: string[], day) => {
               day.symptoms.forEach(symptom => {
@@ -121,16 +121,16 @@ export default function MenstruationTracker() {
               });
               return acc;
             }, []);
-            
+
             const avgPain = currentCycle.reduce((sum, d) => sum + d.painLevel, 0) / currentCycle.length;
-            
+
             // Calculate dominant mood
             const moodCount: Record<string, number> = {};
             currentCycle.forEach(d => {
               moodCount[d.mood] = (moodCount[d.mood] || 0) + 1;
             });
             const dominantMood = Object.entries(moodCount)
-              .sort(([,a], [,b]) => b - a)[0][0];
+              .sort(([, a], [, b]) => b - a)[0][0];
 
             cycles.push({
               startDate: cycleStart,
@@ -146,13 +146,13 @@ export default function MenstruationTracker() {
           currentCycle.push(day);
         }
       });
-      
+
       // Process the last cycle
       if (currentCycle.length > 0) {
         const cycleStart = currentCycle[0].date;
         const cycleEnd = currentCycle[currentCycle.length - 1].date;
         const length = Math.ceil((cycleEnd.getTime() - cycleStart.getTime()) / (1000 * 60 * 60 * 24));
-        
+
         const allSymptoms = currentCycle.reduce((acc: string[], day) => {
           day.symptoms.forEach(symptom => {
             if (!acc.includes(symptom)) {
@@ -161,15 +161,15 @@ export default function MenstruationTracker() {
           });
           return acc;
         }, []);
-        
+
         const avgPain = currentCycle.reduce((sum, d) => sum + d.painLevel, 0) / currentCycle.length;
-        
+
         const moodCount: Record<string, number> = {};
         currentCycle.forEach(d => {
           moodCount[d.mood] = (moodCount[d.mood] || 0) + 1;
         });
         const dominantMood = Object.entries(moodCount)
-          .sort(([,a], [,b]) => b - a)[0][0];
+          .sort(([, a], [, b]) => b - a)[0][0];
 
         cycles.push({
           startDate: cycleStart,
@@ -180,23 +180,23 @@ export default function MenstruationTracker() {
           dominantMood,
         });
       }
-      
+
       setCycleHistory(cycles);
     }
   }, [cycleDays]);
 
   const calculateFertilityWindow = () => {
     if (!lastPeriodStart) return null;
-    
+
     const ovulationDay = new Date(lastPeriodStart);
     ovulationDay.setDate(lastPeriodStart.getDate() + Math.floor(cycleLength / 2) - 14);
-    
+
     const fertilityStart = new Date(ovulationDay);
     fertilityStart.setDate(ovulationDay.getDate() - 5);
-    
+
     const fertilityEnd = new Date(ovulationDay);
     fertilityEnd.setDate(ovulationDay.getDate() + 1);
-    
+
     return {
       ovulationDay,
       fertilityStart,
@@ -228,7 +228,7 @@ export default function MenstruationTracker() {
     let updatedDays: CycleDay[];
     if (existingDayIndex !== -1) {
       // Update existing entry
-      updatedDays = cycleDays.map((day, index) => 
+      updatedDays = cycleDays.map((day, index) =>
         index === existingDayIndex ? newDay : day
       );
       showNotification(`Updated log for ${format(selectedDate, 'MMMM d, yyyy')}`);
@@ -266,7 +266,7 @@ export default function MenstruationTracker() {
     const cycleDay = cycleDays.find(
       (day) => day.date.toDateString() === date.toDateString()
     );
-    
+
     if (cycleDay) {
       return {
         flow: cycleDay.flow,
@@ -275,7 +275,7 @@ export default function MenstruationTracker() {
         hasLog: true,
       };
     }
-    
+
     const fertility = calculateFertilityWindow();
     if (fertility) {
       const dateStr = date.toDateString();
@@ -289,7 +289,7 @@ export default function MenstruationTracker() {
         return { type: "fertile" };
       }
     }
-    
+
     return null;
   };
 
@@ -311,7 +311,7 @@ export default function MenstruationTracker() {
               </TableHeader>
               <TableBody>
                 {cycleHistory.map((cycle, index) => (
-                  <TableRow key={cycle.startDate.toISOString()} 
+                  <TableRow key={cycle.startDate.toISOString()}
                     className="analysis-card hover:bg-gradient-to-r hover:from-pink-50/50 hover:to-purple-50/50 
                     dark:hover:from-pink-900/20 dark:hover:to-purple-900/20 transition-colors">
                     <TableCell className="font-medium text-pink-600 dark:text-pink-300">{formatDate(cycle.startDate)}</TableCell>
@@ -324,7 +324,7 @@ export default function MenstruationTracker() {
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <div className="w-20 h-2 rounded-full bg-gray-100 dark:bg-gray-800">
-                          <div 
+                          <div
                             className="h-full rounded-full bg-gradient-to-r from-green-500 to-red-500"
                             style={{ width: `${cycle.averagePainLevel * 10}%` }}
                           />
@@ -335,15 +335,14 @@ export default function MenstruationTracker() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge 
-                        variant="outline" 
-                        className={`capitalize ${
-                          cycle.dominantMood === 'happy' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 border-green-200' :
+                      <Badge
+                        variant="outline"
+                        className={`capitalize ${cycle.dominantMood === 'happy' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 border-green-200' :
                           cycle.dominantMood === 'sad' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border-blue-200' :
-                          cycle.dominantMood === 'irritated' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300 border-red-200' :
-                          cycle.dominantMood === 'anxious' ? 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300 border-orange-200' :
-                          'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 border-purple-200'
-                        }`}
+                            cycle.dominantMood === 'irritated' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300 border-red-200' :
+                              cycle.dominantMood === 'anxious' ? 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300 border-orange-200' :
+                                'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 border-purple-200'
+                          }`}
                       >
                         {cycle.dominantMood}
                       </Badge>
@@ -351,15 +350,14 @@ export default function MenstruationTracker() {
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
                         {cycle.symptoms.slice(0, 3).map((symptom) => (
-                          <Badge 
-                            key={symptom} 
-                            className={`text-xs ${
-                              symptom.toLowerCase().includes('pain') ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300' :
+                          <Badge
+                            key={symptom}
+                            className={`text-xs ${symptom.toLowerCase().includes('pain') ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300' :
                               symptom.toLowerCase().includes('mood') ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300' :
-                              symptom.toLowerCase().includes('energy') ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300' :
-                              symptom.toLowerCase().includes('sleep') ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' :
-                              'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300'
-                            }`}
+                                symptom.toLowerCase().includes('energy') ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300' :
+                                  symptom.toLowerCase().includes('sleep') ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' :
+                                    'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300'
+                              }`}
                           >
                             {symptom}
                           </Badge>
@@ -377,7 +375,7 @@ export default function MenstruationTracker() {
             </Table>
           </ScrollArea>
         );
-      
+
       case "stats":
         return (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -391,9 +389,9 @@ export default function MenstruationTracker() {
                 <div className="stats-value text-4xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
                   {cycleHistory.length > 0
                     ? Math.round(
-                        cycleHistory.reduce((sum, cycle) => sum + cycle.length, 0) /
-                          cycleHistory.length
-                      )
+                      cycleHistory.reduce((sum, cycle) => sum + cycle.length, 0) /
+                      cycleHistory.length
+                    )
                     : 0}{" "}
                   <span className="text-lg text-gray-500">days</span>
                 </div>
@@ -413,8 +411,8 @@ export default function MenstruationTracker() {
                 <div className="space-y-3">
                   {cycleHistory
                     .flatMap((cycle) => cycle.symptoms)
-                    .reduce((unique: string[], symptom) => 
-                      unique.includes(symptom) ? unique : [...unique, symptom], 
+                    .reduce((unique: string[], symptom) =>
+                      unique.includes(symptom) ? unique : [...unique, symptom],
                       []
                     )
                     .slice(0, 5)
@@ -425,7 +423,7 @@ export default function MenstruationTracker() {
                         ${index % 2 === 0 ? 'bg-blue-50/50 dark:bg-blue-900/30' : 'bg-cyan-50/50 dark:bg-cyan-900/30'}`}
                       >
                         <span className="text-sm font-medium text-blue-700 dark:text-blue-300">{symptom}</span>
-                        <Badge 
+                        <Badge
                           className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white"
                         >
                           {cycleHistory.filter((cycle) =>
@@ -450,9 +448,8 @@ export default function MenstruationTracker() {
                   {cycleHistory.slice(-5).map((cycle, index) => (
                     <div
                       key={cycle.startDate.toISOString()}
-                      className={`p-3 rounded-lg ${
-                        index % 2 === 0 ? 'bg-purple-50/50 dark:bg-purple-900/30' : 'bg-pink-50/50 dark:bg-pink-900/30'
-                      }`}
+                      className={`p-3 rounded-lg ${index % 2 === 0 ? 'bg-purple-50/50 dark:bg-purple-900/30' : 'bg-pink-50/50 dark:bg-pink-900/30'
+                        }`}
                     >
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-sm font-medium text-purple-700 dark:text-purple-300">
@@ -463,9 +460,9 @@ export default function MenstruationTracker() {
                         </span>
                       </div>
                       <div className="h-2 w-full rounded-full bg-gray-100 dark:bg-gray-800">
-                        <div 
+                        <div
                           className="h-full rounded-full bg-gradient-to-r from-purple-500 to-pink-500"
-                          style={{ 
+                          style={{
                             width: `${cycle.averagePainLevel * 10}%`,
                           }}
                         />
@@ -490,7 +487,7 @@ export default function MenstruationTracker() {
           {notification.message}
         </div>
       )}
-      
+
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -499,7 +496,7 @@ export default function MenstruationTracker() {
       >
         <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-pink-200/30 to-purple-200/20 dark:from-pink-900/20 dark:to-purple-900/10 rounded-full blur-3xl -z-10" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-blue-200/30 to-purple-200/20 dark:from-blue-900/20 dark:to-purple-900/10 rounded-full blur-3xl -z-10" />
-        
+
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
@@ -700,8 +697,8 @@ export default function MenstruationTracker() {
                     </div>
                   </div>
 
-                  <Button 
-                    onClick={addCycleDay} 
+                  <Button
+                    onClick={addCycleDay}
                     className="w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white shadow-md group"
                   >
                     <Plus className="mr-2 h-4 w-4 group-hover:rotate-90 transition-transform" />
@@ -761,8 +758,8 @@ export default function MenstruationTracker() {
                         <div className="mt-3 flex items-center gap-2">
                           <Badge variant="secondary" className="bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-300">
                             {currentCycleDay <= 5 ? "Menstrual" :
-                             currentCycleDay <= 14 ? "Follicular" :
-                             currentCycleDay <= 21 ? "Ovulation" : "Luteal"}
+                              currentCycleDay <= 14 ? "Follicular" :
+                                currentCycleDay <= 21 ? "Ovulation" : "Luteal"}
                           </Badge>
                         </div>
                       </CardContent>

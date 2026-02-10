@@ -70,7 +70,7 @@ export function HeroSection() {
               className="text-lg md:text-xl text-muted-foreground max-w-lg leading-relaxed"
             >
               Transform your device into a diagnostic powerhouse.
-              EchoMed uses advanced acoustic AI to analyze heart and lung sounds with
+              VaidyaSetu uses advanced acoustic AI to analyze heart and lung sounds with
               <span className="text-foreground font-medium"> 99.2% clinical accuracy</span>.
             </motion.p>
 

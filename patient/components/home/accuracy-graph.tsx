@@ -8,25 +8,25 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { Activity, TrendingUp, CheckCircle } from "lucide-react";
 
 const heartData = [
-  { name: "Jan", EchoMed: 97.2, Traditional: 92.1 },
-  { name: "Feb", EchoMed: 97.5, Traditional: 92.3 },
-  { name: "Mar", EchoMed: 97.8, Traditional: 92.4 },
-  { name: "Apr", EchoMed: 98.1, Traditional: 92.5 },
-  { name: "May", EchoMed: 98.4, Traditional: 92.7 },
-  { name: "Jun", EchoMed: 98.7, Traditional: 92.8 },
-  { name: "Jul", EchoMed: 99.0, Traditional: 93.0 },
-  { name: "Aug", EchoMed: 99.2, Traditional: 93.1 },
+  { name: "Jan", VaidyaSetu: 97.2, Traditional: 92.1 },
+  { name: "Feb", VaidyaSetu: 97.5, Traditional: 92.3 },
+  { name: "Mar", VaidyaSetu: 97.8, Traditional: 92.4 },
+  { name: "Apr", VaidyaSetu: 98.1, Traditional: 92.5 },
+  { name: "May", VaidyaSetu: 98.4, Traditional: 92.7 },
+  { name: "Jun", VaidyaSetu: 98.7, Traditional: 92.8 },
+  { name: "Jul", VaidyaSetu: 99.0, Traditional: 93.0 },
+  { name: "Aug", VaidyaSetu: 99.2, Traditional: 93.1 },
 ];
 
 const lungData = [
-  { name: "Jan", EchoMed: 96.5, Traditional: 91.2 },
-  { name: "Feb", EchoMed: 96.8, Traditional: 91.4 },
-  { name: "Mar", EchoMed: 97.1, Traditional: 91.5 },
-  { name: "Apr", EchoMed: 97.4, Traditional: 91.7 },
-  { name: "May", EchoMed: 97.7, Traditional: 91.8 },
-  { name: "Jun", EchoMed: 98.0, Traditional: 92.0 },
-  { name: "Jul", EchoMed: 98.3, Traditional: 92.1 },
-  { name: "Aug", EchoMed: 98.5, Traditional: 92.3 },
+  { name: "Jan", VaidyaSetu: 96.5, Traditional: 91.2 },
+  { name: "Feb", VaidyaSetu: 96.8, Traditional: 91.4 },
+  { name: "Mar", VaidyaSetu: 97.1, Traditional: 91.5 },
+  { name: "Apr", VaidyaSetu: 97.4, Traditional: 91.7 },
+  { name: "May", VaidyaSetu: 97.7, Traditional: 91.8 },
+  { name: "Jun", VaidyaSetu: 98.0, Traditional: 92.0 },
+  { name: "Jul", VaidyaSetu: 98.3, Traditional: 92.1 },
+  { name: "Aug", VaidyaSetu: 98.5, Traditional: 92.3 },
 ];
 
 export function AccuracyGraph() {
@@ -38,7 +38,7 @@ export function AccuracyGraph() {
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-bold mb-4">Unmatched Precision</h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Validated against clinical gold standards, EchoMed delivers hospital-grade accuracy from the comfort of your home.
+            Validated against clinical gold standards, VaidyaSetu delivers hospital-grade accuracy from the comfort of your home.
           </p>
         </div>
 
@@ -58,7 +58,7 @@ export function AccuracyGraph() {
                       Diagnostic Performance
                     </CardTitle>
                     <CardDescription>
-                      Comparative study: EchoMed AI vs. Standard Mobile Tools (2025)
+                      Comparative study: VaidyaSetu AI vs. Standard Mobile Tools (2025)
                     </CardDescription>
                   </div>
                   <TabsList className="grid w-full md:w-auto grid-cols-2 bg-muted/50 p-1">
@@ -114,7 +114,7 @@ export function AccuracyGraph() {
                           <Legend iconType="circle" />
                           <Area
                             type="monotone"
-                            dataKey="EchoMed"
+                            dataKey="VaidyaSetu"
                             stroke="hsl(var(--primary))"
                             strokeWidth={3}
                             fillOpacity={1}

@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'VR Doctor | EcoMed AI',
+  title: 'VR Doctor | VaidyaSetu',
   description: 'Virtual doctor consultation with posture analysis and voice interaction',
 };
 

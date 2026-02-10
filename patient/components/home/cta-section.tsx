@@ -17,16 +17,16 @@ export function CTASection() {
           className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary to-primary/60 text-primary-foreground"
         >
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')] bg-cover bg-center opacity-10" />
-          
+
           <div className="relative z-10 px-6 py-16 md:px-12 md:py-24 lg:flex lg:items-center lg:justify-between">
             <div className="lg:max-w-xl">
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
                 Transform Your Healthcare Experience
               </h2>
               <p className="mt-4 text-lg opacity-90">
-                Join millions of users who are taking control of their health with EchoMed's AI-powered diagnostics and personalized insights.
+                Join millions of users who are taking control of their health with VaidyaSetu's AI-powered diagnostics and personalized insights.
               </p>
-              
+
               <div className="mt-8 space-y-4">
                 <div className="flex items-center">
                   <CheckCircle2 className="h-5 w-5 mr-2 flex-shrink-0" />
@@ -42,7 +42,7 @@ export function CTASection() {
                 </div>
               </div>
             </div>
-            
+
             <div className="mt-10 flex flex-col items-center lg:mt-0 lg:items-start">
               <Button size="lg" variant="secondary" asChild className="group">
                 <Link href="/dashboard">

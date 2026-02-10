@@ -2,18 +2,17 @@
 
 import React, { createContext, useState, useContext, ReactNode, useEffect, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { healthcareSystemPrompt } from "@/lib/gemini";
-import { generateDirectStreamingResponse } from "@/lib/directGemini";
+import { getAIAssistant, DR_VAIDYA_SYSTEM_PROMPT } from "@/lib/ai-assistant";
 import { generateFallbackStreamingResponse } from "@/lib/fallbackResponses";
 import { generateFitnessResponse } from "@/lib/fitnessRecommendations";
 import { generateMentalWellnessResponse } from "@/lib/mentalWellnessRecommendations";
 import { saveAs } from "file-saver";
 import { jsPDF } from "jspdf";
-import { 
-  speakText, 
-  speakLongText, 
-  stopSpeaking, 
-  initSpeechSynthesis, 
+import {
+  speakText,
+  speakLongText,
+  stopSpeaking,
+  initSpeechSynthesis,
   isSpeechSynthesisActive,
   setSpeechRate,
   setSpeechPitch,
@@ -101,13 +100,13 @@ export function GeminiAssistantProvider({ children }: { children: ReactNode }) {
     {
       id: "system-1",
       role: "system",
-      content: healthcareSystemPrompt,
+      content: DR_VAIDYA_SYSTEM_PROMPT,
       timestamp: new Date(),
     },
     {
       id: "welcome",
       role: "assistant",
-      content: "Hello! I'm Dr. Echo, your EchoMed AI health assistant. How can I help you with your health today?",
+      content: "Hello! I'm Dr. Vaidya, your VaidyaSetu AI health assistant. How can I help you with your health today?",
       timestamp: new Date(),
     },
   ]);
@@ -121,7 +120,7 @@ export function GeminiAssistantProvider({ children }: { children: ReactNode }) {
   const [speechRate, setSpeechRateState] = useState(1.0);
   const [speechPitch, setSpeechPitchState] = useState(1.0);
   const [speechVolume, setSpeechVolumeState] = useState(1.0);
-  
+
   // Use a more generic type that covers our use cases without requiring specific SpeechRecognition interface
   const recognitionRef = useRef<any>(null);
 
@@ -131,25 +130,33 @@ export function GeminiAssistantProvider({ children }: { children: ReactNode }) {
       try {
         console.log("Testing direct Gemini API connection...");
         const testPrompt = "Hello, this is a test. Please respond with a short greeting.";
-        
+
         try {
-          // Try the direct API first
-          const directResponse = await generateDirectStreamingResponse(
-            testPrompt, 
-            () => {} // Empty callback since we don't need to update UI
+          // Try the unified API
+          let directResponse = "";
+          await getAIAssistant().generateStreamingResponse(
+            [{
+              id: "test",
+              role: "user",
+              content: testPrompt,
+              timestamp: new Date()
+            }],
+            {
+              onComplete: (text) => { directResponse = text; }
+            }
           );
-          console.log("API test successful with direct response:", directResponse.substring(0, 50) + "...");
+          console.log("API test successful with response:", directResponse.substring(0, 50) + "...");
         } catch (apiError) {
           console.error("Direct API test failed:", apiError);
-          
+
           // Test fallback system
           console.log("Testing fallback response system...");
           const fallbackResponse = await generateFallbackStreamingResponse(
-            "hi", 
-            () => {}
+            "hi",
+            () => { }
           );
           console.log("Fallback system test successful:", fallbackResponse.substring(0, 50) + "...");
-          
+
           // Add a note to the chat that we're using fallback responses
           setMessages(prev => [
             ...prev,
@@ -165,7 +172,7 @@ export function GeminiAssistantProvider({ children }: { children: ReactNode }) {
         console.error("All API tests failed:", error);
       }
     };
-    
+
     testAPI();
   }, []);
 
@@ -180,7 +187,7 @@ export function GeminiAssistantProvider({ children }: { children: ReactNode }) {
           parsedMessages.unshift({
             id: "system-1",
             role: "system",
-            content: healthcareSystemPrompt,
+            content: DR_VAIDYA_SYSTEM_PROMPT,
             timestamp: new Date(),
           });
         }
@@ -207,11 +214,11 @@ export function GeminiAssistantProvider({ children }: { children: ReactNode }) {
       recognitionRef.current = new SpeechRecognitionConstructor();
       recognitionRef.current.continuous = true;
       recognitionRef.current.interimResults = true;
-      
+
       recognitionRef.current.onresult = (event: any) => {
         let interimTranscript = '';
         let finalTranscript = '';
-        
+
         for (let i = event.resultIndex; i < event.results.length; i++) {
           const transcript = event.results[i][0].transcript;
           if (event.results[i].isFinal) {
@@ -220,20 +227,20 @@ export function GeminiAssistantProvider({ children }: { children: ReactNode }) {
             interimTranscript += transcript;
           }
         }
-        
+
         setTranscript(prev => prev + finalTranscript + interimTranscript);
       };
-      
+
       recognitionRef.current.onerror = (event: any) => {
         console.error('Speech recognition error', event.error);
         setIsListening(false);
       };
-      
+
       recognitionRef.current.onend = (event: any) => {
         setIsListening(false);
       };
     }
-    
+
     return () => {
       if (recognitionRef.current) {
         recognitionRef.current.stop();
@@ -246,16 +253,16 @@ export function GeminiAssistantProvider({ children }: { children: ReactNode }) {
     const initSpeech = async () => {
       await initSpeechSynthesis();
     };
-    
+
     initSpeech();
   }, []);
-  
+
   // Check speaking status periodically to update the UI
   useEffect(() => {
     const checkSpeakingInterval = setInterval(() => {
       setIsSpeaking(isSpeechSynthesisActive());
     }, 200);
-    
+
     return () => clearInterval(checkSpeakingInterval);
   }, []);
 
@@ -288,13 +295,13 @@ export function GeminiAssistantProvider({ children }: { children: ReactNode }) {
       {
         id: "system-1",
         role: "system",
-        content: healthcareSystemPrompt,
+        content: DR_VAIDYA_SYSTEM_PROMPT,
         timestamp: new Date(),
       },
       {
         id: "welcome",
         role: "assistant",
-        content: "Hello! I'm Dr. Echo, your EchoMed AI health assistant. How can I help you with your health today?",
+        content: "Hello! I'm Dr. Vaidya, your VaidyaSetu AI health assistant. How can I help you with your health today?",
         timestamp: new Date(),
       },
     ]);
@@ -314,48 +321,48 @@ export function GeminiAssistantProvider({ children }: { children: ReactNode }) {
 
   const downloadChatAsPDF = () => {
     const doc = new jsPDF();
-    
+
     // Add title
     doc.setFontSize(18);
-    doc.text("EchoMed AI Health Assistant Chat", 20, 20);
-    
+    doc.text("VaidyaSetu AI Health Assistant Chat", 20, 20);
+
     // Add date
     doc.setFontSize(12);
     doc.text(`Generated on: ${new Date().toLocaleString()}`, 20, 30);
-    
+
     // Add messages
     doc.setFontSize(10);
     let yPosition = 40;
-    
+
     // Filter out system messages
     const chatMessages = messages.filter(msg => msg.role !== "system");
-    
+
     chatMessages.forEach((message, index) => {
-      const role = message.role === "assistant" ? "Dr. Echo" : "You";
+      const role = message.role === "assistant" ? "Dr. Vaidya" : "You";
       const timestamp = new Date(message.timestamp).toLocaleString();
-      
+
       // Add role and timestamp
       doc.setFont("helvetica", "bold");
       doc.text(`${role} (${timestamp})`, 20, yPosition);
       yPosition += 5;
-      
+
       // Add message content with word wrapping
       doc.setFont("helvetica", "normal");
       const splitText = doc.splitTextToSize(message.content, 170);
       doc.text(splitText, 20, yPosition);
-      
+
       // Update y position for next message
       yPosition += splitText.length * 5 + 10;
-      
+
       // Add new page if needed
       if (yPosition > 280 && index < chatMessages.length - 1) {
         doc.addPage();
         yPosition = 20;
       }
     });
-    
+
     // Save the PDF
-    doc.save("echomed-chat.pdf");
+    doc.save("vaidya-chat.pdf");
   };
 
   // Toggle text-to-speech setting
@@ -365,37 +372,37 @@ export function GeminiAssistantProvider({ children }: { children: ReactNode }) {
     }
     setTextToSpeechEnabled(!textToSpeechEnabled);
   };
-  
+
   // Speak text and manage state
   const speakMessage = (text: string) => {
     if (!textToSpeechEnabled) return;
-    
+
     stopSpeaking();
     setIsSpeaking(true);
     speakLongText(text);
-    
+
     // Safety fallback - check if speaking ended
     setTimeout(() => {
       setIsSpeaking(isSpeechSynthesisActive());
     }, 1000);
   };
-  
+
   // Update speech settings
   const handleSetSpeechRate = (rate: number) => {
     setSpeechRateState(rate);
     setSpeechRate(rate);
   };
-  
+
   const handleSetSpeechPitch = (pitch: number) => {
     setSpeechPitchState(pitch);
     setSpeechPitch(pitch);
   };
-  
+
   const handleSetSpeechVolume = (volume: number) => {
     setSpeechVolumeState(volume);
     setSpeechVolume(volume);
   };
-  
+
   // Stop speaking
   const handleStopSpeaking = () => {
     stopSpeaking();
@@ -410,27 +417,27 @@ export function GeminiAssistantProvider({ children }: { children: ReactNode }) {
       content: message,
       timestamp: new Date(),
     };
-    
+
     setMessages((prev) => [...prev, userMessage]);
     setIsTyping(true);
     setCurrentResponse("");
-    
+
     try {
       // Check if this is a fitness data query
       if (message.includes("fitness data") && message.includes("goal")) {
         console.log("Detected fitness data query, using specialized fitness response generator");
         const fitnessResponse = generateFitnessResponse(message);
-        
+
         // Simulate streaming for better UX
         let currentText = "";
         const words = fitnessResponse.split(" ");
-        
+
         for (let i = 0; i < words.length; i++) {
           currentText += (i === 0 ? "" : " ") + words[i];
           setCurrentResponse(currentText);
           await new Promise(resolve => setTimeout(resolve, 10)); // Small delay for streaming effect
         }
-        
+
         // Add the final message
         const aiMessage: Message = {
           id: uuidv4(),
@@ -438,33 +445,33 @@ export function GeminiAssistantProvider({ children }: { children: ReactNode }) {
           content: fitnessResponse,
           timestamp: new Date(),
         };
-        
+
         setMessages((prev) => [...prev, aiMessage]);
         setIsTyping(false);
-        
+
         // Speak the response if text-to-speech is enabled
         if (textToSpeechEnabled) {
           speakMessage(fitnessResponse);
         }
-        
+
         return;
       }
-      
+
       // Check if this is a mental wellness query
       if (message.includes("mental wellness advice") && message.includes("current state")) {
         console.log("Detected mental wellness query, using specialized mental wellness response generator");
         const wellnessResponse = generateMentalWellnessResponse(message);
-        
+
         // Simulate streaming for better UX
         let currentText = "";
         const words = wellnessResponse.split(" ");
-        
+
         for (let i = 0; i < words.length; i++) {
           currentText += (i === 0 ? "" : " ") + words[i];
           setCurrentResponse(currentText);
           await new Promise(resolve => setTimeout(resolve, 10)); // Small delay for streaming effect
         }
-        
+
         // Add the final message
         const aiMessage: Message = {
           id: uuidv4(),
@@ -472,25 +479,25 @@ export function GeminiAssistantProvider({ children }: { children: ReactNode }) {
           content: wellnessResponse,
           timestamp: new Date(),
         };
-        
+
         setMessages((prev) => [...prev, aiMessage]);
         setIsTyping(false);
-        
+
         // Speak the response if text-to-speech is enabled
         if (textToSpeechEnabled) {
           speakMessage(wellnessResponse);
         }
-        
+
         return;
       }
-      
+
       console.log("Attempting to use direct API implementation...");
-      
+
       // Check if API key is available
       const apiKey = process.env.NEXT_PUBLIC_GOOGLE_GEMINI_API_KEY;
       if (!apiKey || apiKey === 'your_api_key_here') {
         console.warn("No valid Gemini API key found. Using fallback response system.");
-        
+
         // Use fallback response system
         const fallbackResponse = await generateFallbackStreamingResponse(
           message,
@@ -498,44 +505,51 @@ export function GeminiAssistantProvider({ children }: { children: ReactNode }) {
             setCurrentResponse(text);
           }
         );
-        
+
         const aiMessage: Message = {
           id: uuidv4(),
           role: "assistant",
           content: fallbackResponse + "\n\nNote: I'm currently running in limited mode because the API key is not configured. Please set up the Gemini API key for full functionality.",
           timestamp: new Date(),
         };
-        
+
         setMessages((prev) => [...prev, aiMessage]);
-        
+
         if (textToSpeechEnabled) {
           speakMessage(fallbackResponse);
         }
-        
+
         setIsTyping(false);
         return;
       }
-      
+
       // Format a simple prompt with the system message and user's message
-      const systemPrompt = "You are Dr. Echo, an EchoMed AI health assistant. Answer the following health question helpfully and accurately.";
+      const systemPrompt = "You are Dr. Vaidya, an VaidyaSetu AI health assistant. Answer the following health question helpfully and accurately.";
       const fullPrompt = `${systemPrompt}\n\nUser's question: ${message}`;
-      
+
       let apiSucceeded = false;
       let finalResponse = "";
-      
+
       try {
         // Try the direct API implementation first
-        finalResponse = await generateDirectStreamingResponse(
-          fullPrompt,
-          (text) => {
-            setCurrentResponse(text);
+        // Try the unified API implementation
+        await getAIAssistant().generateStreamingResponse(
+          [...messages, {
+            id: uuidv4(),
+            role: "user",
+            content: message,
+            timestamp: new Date()
+          }],
+          {
+            onToken: (text) => setCurrentResponse(text),
+            onComplete: (text) => { finalResponse = text; }
           }
         );
         apiSucceeded = true;
         console.log("Direct API response successful");
       } catch (apiError) {
         console.error("Direct API failed, falling back to local responses:", apiError);
-        
+
         // Fall back to local responses if the API fails
         finalResponse = await generateFallbackStreamingResponse(
           message,
@@ -543,12 +557,12 @@ export function GeminiAssistantProvider({ children }: { children: ReactNode }) {
             setCurrentResponse(text);
           }
         );
-        
+
         // Add a note to the response explaining fallback
         finalResponse += "\n\nNote: I'm currently using a limited response system because the AI service connection experienced an issue.";
         console.log("Using fallback response system");
       }
-      
+
       // When streaming is complete, add the final message
       const aiMessage: Message = {
         id: uuidv4(),
@@ -556,16 +570,16 @@ export function GeminiAssistantProvider({ children }: { children: ReactNode }) {
         content: finalResponse,
         timestamp: new Date(),
       };
-      
+
       setMessages((prev) => [...prev, aiMessage]);
-      
+
       // Speak the response if text-to-speech is enabled
       if (textToSpeechEnabled) {
         speakMessage(finalResponse);
       }
     } catch (error) {
       console.error("Error in sendMessage:", error);
-      
+
       // Add an error message
       const errorMessage: Message = {
         id: uuidv4(),
@@ -573,9 +587,9 @@ export function GeminiAssistantProvider({ children }: { children: ReactNode }) {
         content: "I'm sorry, there was an error processing your request. Please try again later.\n\nIf this persists, please check that the Gemini API key is properly configured.",
         timestamp: new Date(),
       };
-      
+
       setMessages((prev) => [...prev, errorMessage]);
-      
+
       // Speak the error message if text-to-speech is enabled
       if (textToSpeechEnabled) {
         speakMessage(errorMessage.content);
@@ -705,7 +719,7 @@ export function GeminiAssistantDialogWrapper() {
     <AnimatePresence>
       <AnimatedDialog onClose={closeAssistant}>
         <DialogHeader>
-          <DialogTitle>Dr. Echo - AI Health Assistant</DialogTitle>
+          <DialogTitle>Dr. Vaidya - AI Health Assistant</DialogTitle>
           <DialogDescription>
             Your personal AI health assistant powered by advanced medical knowledge.
           </DialogDescription>
@@ -717,16 +731,14 @@ export function GeminiAssistantDialogWrapper() {
               {messages.slice(2).map((message) => (
                 <div
                   key={message.id}
-                  className={`flex ${
-                    message.role === "assistant" ? "justify-start" : "justify-end"
-                  }`}
+                  className={`flex ${message.role === "assistant" ? "justify-start" : "justify-end"
+                    }`}
                 >
                   <div
-                    className={`rounded-lg px-4 py-2 max-w-[80%] ${
-                      message.role === "assistant"
-                        ? "bg-muted"
-                        : "bg-primary text-primary-foreground"
-                    }`}
+                    className={`rounded-lg px-4 py-2 max-w-[80%] ${message.role === "assistant"
+                      ? "bg-muted"
+                      : "bg-primary text-primary-foreground"
+                      }`}
                   >
                     <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                     <div className="flex items-center justify-end gap-2 mt-1">

@@ -11,15 +11,15 @@ export function InteractiveTutorials() {
   const [activeTab, setActiveTab] = useState("heart");
   const [currentStep, setCurrentStep] = useState(1);
   const [isPlaying, setIsPlaying] = useState(false);
-  
+
   const resetTutorial = () => {
     setCurrentStep(1);
     setIsPlaying(false);
   };
-  
+
   const startTutorial = () => {
     setIsPlaying(true);
-    
+
     // Simulate tutorial progression
     const interval = setInterval(() => {
       setCurrentStep(prev => {
@@ -31,19 +31,19 @@ export function InteractiveTutorials() {
         return prev + 1;
       });
     }, 3000);
-    
+
     return () => clearInterval(interval);
   };
-  
+
   return (
     <section>
       <div className="text-center mb-8">
         <h2 className="text-3xl font-bold mb-2">Interactive Tutorials</h2>
         <p className="text-muted-foreground max-w-3xl mx-auto">
-          Learn how to use EchoMed effectively with these step-by-step interactive guides
+          Learn how to use VaidyaSetu effectively with these step-by-step interactive guides
         </p>
       </div>
-      
+
       <Tabs defaultValue="heart" value={activeTab} onValueChange={(value) => {
         setActiveTab(value);
         resetTutorial();
@@ -64,7 +64,7 @@ export function InteractiveTutorials() {
             </TabsTrigger>
           </TabsList>
         </div>
-        
+
         <TabsContent value="heart">
           <Card>
             <CardHeader>
@@ -85,12 +85,12 @@ export function InteractiveTutorials() {
                       </Button>
                     </div>
                   )}
-                  
+
                   {(isPlaying || currentStep > 1) && (
                     <div className="w-full h-full p-6">
                       {currentStep === 1 && (
-                        <motion.div 
-                          initial={{ opacity: 0 }} 
+                        <motion.div
+                          initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           className="flex flex-col items-center justify-center h-full"
                         >
@@ -102,10 +102,10 @@ export function InteractiveTutorials() {
                           </div>
                         </motion.div>
                       )}
-                      
+
                       {currentStep === 2 && (
-                        <motion.div 
-                          initial={{ opacity: 0 }} 
+                        <motion.div
+                          initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           className="flex flex-col items-center justify-center h-full"
                         >
@@ -117,10 +117,10 @@ export function InteractiveTutorials() {
                           </div>
                         </motion.div>
                       )}
-                      
+
                       {currentStep === 3 && (
-                        <motion.div 
-                          initial={{ opacity: 0 }} 
+                        <motion.div
+                          initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           className="flex flex-col items-center justify-center h-full"
                         >
@@ -132,10 +132,10 @@ export function InteractiveTutorials() {
                           </div>
                         </motion.div>
                       )}
-                      
+
                       {currentStep === 4 && (
-                        <motion.div 
-                          initial={{ opacity: 0 }} 
+                        <motion.div
+                          initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           className="flex flex-col items-center justify-center h-full"
                         >
@@ -147,17 +147,17 @@ export function InteractiveTutorials() {
                           </div>
                         </motion.div>
                       )}
-                      
+
                       {currentStep === 5 && (
-                        <motion.div 
-                          initial={{ opacity: 0 }} 
+                        <motion.div
+                          initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           className="flex flex-col items-center justify-center h-full"
                         >
                           <div className="text-center">
                             <h3 className="text-lg font-medium mb-2">Tutorial Complete!</h3>
                             <p className="text-sm text-muted-foreground mb-4">
-                              You're now ready to record heart sounds with EchoMed.
+                              You're now ready to record heart sounds with VaidyaSetu.
                             </p>
                             <Button onClick={resetTutorial}>Restart Tutorial</Button>
                           </div>
@@ -167,31 +167,30 @@ export function InteractiveTutorials() {
                   )}
                 </div>
               </div>
-              
+
               <div className="flex justify-between items-center">
                 <div className="flex items-center">
                   <span className="text-sm font-medium mr-4">Progress:</span>
                   <div className="flex space-x-1">
                     {[1, 2, 3, 4, 5].map((step) => (
-                      <div 
+                      <div
                         key={step}
-                        className={`h-2 w-8 rounded-full ${
-                          step <= currentStep ? "bg-primary" : "bg-muted"
-                        }`}
+                        className={`h-2 w-8 rounded-full ${step <= currentStep ? "bg-primary" : "bg-muted"
+                          }`}
                       />
                     ))}
                   </div>
                 </div>
-                
+
                 <div className="flex space-x-2">
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     onClick={resetTutorial}
                     disabled={currentStep === 1 && !isPlaying}
                   >
                     Reset
                   </Button>
-                  
+
                   {currentStep < 5 && !isPlaying && (
                     <Button onClick={startTutorial}>
                       Continue
@@ -202,7 +201,7 @@ export function InteractiveTutorials() {
             </CardContent>
           </Card>
         </TabsContent>
-        
+
         <TabsContent value="lung">
           <Card>
             <CardHeader>
@@ -224,13 +223,13 @@ export function InteractiveTutorials() {
             </CardContent>
           </Card>
         </TabsContent>
-        
+
         <TabsContent value="analysis">
           <Card>
             <CardHeader>
               <CardTitle>Understanding Sound Analysis</CardTitle>
               <CardDescription>
-                Learn how to interpret the results of EchoMed's AI analysis
+                Learn how to interpret the results of VaidyaSetu's AI analysis
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -247,7 +246,7 @@ export function InteractiveTutorials() {
           </Card>
         </TabsContent>
       </Tabs>
-      
+
       <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>
           <CardContent className="p-6">
@@ -258,7 +257,7 @@ export function InteractiveTutorials() {
               <div>
                 <h3 className="font-medium mb-1">Video Tutorials</h3>
                 <p className="text-sm text-muted-foreground mb-2">
-                  Watch detailed video guides on using EchoMed effectively
+                  Watch detailed video guides on using VaidyaSetu effectively
                 </p>
                 <Button variant="link" size="sm" className="p-0 h-auto flex items-center">
                   View Videos
@@ -268,7 +267,7 @@ export function InteractiveTutorials() {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-6">
             <div className="flex items-start gap-4">
@@ -288,7 +287,7 @@ export function InteractiveTutorials() {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-6">
             <div className="flex items-start gap-4">
@@ -298,7 +297,7 @@ export function InteractiveTutorials() {
               <div>
                 <h3 className="font-medium mb-1">Live Webinars</h3>
                 <p className="text-sm text-muted-foreground mb-2">
-                  Join interactive sessions with EchoMed experts
+                  Join interactive sessions with VaidyaSetu experts
                 </p>
                 <Button variant="link" size="sm" className="p-0 h-auto flex items-center">
                   Register Now

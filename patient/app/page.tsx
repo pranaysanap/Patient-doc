@@ -28,7 +28,7 @@ function HeartShowcase() {
           </h2>
 
           <p className="max-w-2xl mx-auto text-muted-foreground mb-16 text-lg">
-            At EchoMed, we blend advanced technology with human compassion.
+            At VaidyaSetu, we blend advanced technology with human compassion.
             Experience care that understands you.
           </p>
         </motion.div>

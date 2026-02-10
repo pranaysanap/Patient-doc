@@ -26,7 +26,7 @@ export function AIAssistantProvider({ children }: { children: ReactNode }) {
     {
       id: "welcome",
       role: "assistant",
-      content: "Hello! I'm your EchoMed AI assistant. How can I help you with your health today?",
+      content: "Hello! I'm your VaidyaSetu AI assistant. How can I help you with your health today?",
       timestamp: new Date(),
     },
   ]);
@@ -43,10 +43,10 @@ export function AIAssistantProvider({ children }: { children: ReactNode }) {
       content: message,
       timestamp: new Date(),
     };
-    
+
     setMessages((prev) => [...prev, userMessage]);
     setIsTyping(true);
-    
+
     // Simulate AI response (in a real app, this would call an API)
     setTimeout(() => {
       const responses = [
@@ -56,14 +56,14 @@ export function AIAssistantProvider({ children }: { children: ReactNode }) {
         "Your latest readings show improvement compared to last week. Your treatment plan appears to be effective.",
         "I've detected a slight irregularity in your readings. It's likely nothing to worry about, but I recommend discussing it with your doctor at your next appointment."
       ];
-      
+
       const aiMessage: Message = {
         id: `assistant-${Date.now()}`,
         role: "assistant",
         content: responses[Math.floor(Math.random() * responses.length)],
         timestamp: new Date(),
       };
-      
+
       setMessages((prev) => [...prev, aiMessage]);
       setIsTyping(false);
     }, 1500);
@@ -120,40 +120,38 @@ function AIAssistantDialog() {
         <div className="flex items-center justify-between p-4 bg-primary text-primary-foreground">
           <div className="flex items-center space-x-2">
             <div className="h-2 w-2 rounded-full bg-green-400 animate-pulse" />
-            <h3 className="font-medium">EchoMed AI Assistant</h3>
+            <h3 className="font-medium">VaidyaSetu AI Assistant</h3>
           </div>
           <Button variant="ghost" size="icon" onClick={closeAssistant} className="text-primary-foreground">
             <X className="h-4 w-4" />
           </Button>
         </div>
-        
+
         <ScrollArea className="h-80 p-4 bg-background">
           <div className="space-y-4">
             {messages.map((message) => (
               <div
                 key={message.id}
-                className={`flex ${
-                  message.role === "user" ? "justify-end" : "justify-start"
-                }`}
+                className={`flex ${message.role === "user" ? "justify-end" : "justify-start"
+                  }`}
               >
                 <div
-                  className={`max-w-[80%] rounded-lg px-4 py-2 ${
-                    message.role === "user"
+                  className={`max-w-[80%] rounded-lg px-4 py-2 ${message.role === "user"
                       ? "bg-primary text-primary-foreground"
                       : "bg-muted"
-                  }`}
+                    }`}
                 >
                   <p className="text-sm">{message.content}</p>
                   <p className="text-xs opacity-70 mt-1">
-                    {message.timestamp.toLocaleTimeString([], { 
-                      hour: '2-digit', 
-                      minute: '2-digit' 
+                    {message.timestamp.toLocaleTimeString([], {
+                      hour: '2-digit',
+                      minute: '2-digit'
                     })}
                   </p>
                 </div>
               </div>
             ))}
-            
+
             {isTyping && (
               <div className="flex justify-start">
                 <div className="max-w-[80%] rounded-lg px-4 py-2 bg-muted">
@@ -168,7 +166,7 @@ function AIAssistantDialog() {
             <div ref={messagesEndRef} />
           </div>
         </ScrollArea>
-        
+
         <form onSubmit={handleSubmit} className="p-4 border-t bg-background">
           <div className="flex space-x-2">
             <Input

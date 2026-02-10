@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { MessageSquare, Mic, Send, Sparkles, Bot, StopCircle } from "lucide-react";
-import { getGeminiResponse } from "@/lib/gemini";
+import { getAIAssistant, Message } from "@/lib/ai-assistant";
 
 // Speech Recognition Type Definition
 declare global {
@@ -16,7 +16,7 @@ declare global {
 
 export function AIAssistantDemo() {
   const [messages, setMessages] = useState<{ role: string; content: string }[]>([
-    { role: "assistant", content: "Hello! I'm EchoMed. How can I help you with your health today?" }
+    { role: "assistant", content: "Hello! I'm VaidyaSetu. How can I help you with your health today?" }
   ]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
@@ -73,12 +73,23 @@ export function AIAssistantDemo() {
     // Call Gemini API
     try {
       // Format history for the API (only keeping recent context to save tokens/complexity)
-      const history = messages.slice(-4).map(m => ({
-        role: m.role,
-        parts: m.content
+      // Format history for the AI Assistant Service
+      const historyMessages: Message[] = messages.slice(-4).map(m => ({
+        id: Math.random().toString(),
+        role: m.role as "user" | "assistant",
+        content: m.content,
+        timestamp: new Date()
       }));
 
-      const response = await getGeminiResponse(history, text);
+      // Add the current user message
+      historyMessages.push({
+        id: Math.random().toString(),
+        role: "user",
+        content: text,
+        timestamp: new Date()
+      });
+
+      const response = await getAIAssistant().generateResponse(historyMessages);
 
       setMessages(prev => [...prev, { role: "assistant", content: response }]);
     } catch (error) {
@@ -158,7 +169,7 @@ export function AIAssistantDemo() {
                       <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500 border-2 border-background"></span>
                     </div>
                     <div>
-                      <h3 className="font-semibold text-sm">EchoMed AI</h3>
+                      <h3 className="font-semibold text-sm">VaidyaSetu AI</h3>
                       <p className="text-[10px] text-primary font-medium">Online • Gemini Pro</p>
                     </div>
                   </div>
@@ -177,8 +188,8 @@ export function AIAssistantDemo() {
                       >
                         <div
                           className={`max-w-[85%] p-3.5 rounded-2xl text-sm leading-relaxed shadow-sm ${message.role === "user"
-                              ? "bg-primary text-primary-foreground rounded-tr-sm"
-                              : "bg-muted text-foreground rounded-tl-sm border border-border/50"
+                            ? "bg-primary text-primary-foreground rounded-tr-sm"
+                            : "bg-muted text-foreground rounded-tl-sm border border-border/50"
                             }`}
                         >
                           {message.content}
@@ -218,7 +229,7 @@ export function AIAssistantDemo() {
                       value={input}
                       onChange={(e) => setInput(e.target.value)}
                       onKeyDown={handleKeyDown}
-                      placeholder={isListening ? "Listening..." : "Ask EchoMed..."}
+                      placeholder={isListening ? "Listening..." : "Ask VaidyaSetu..."}
                       className="flex-1 bg-transparent border-none focus:outline-none text-sm px-2"
                     />
                     <Button

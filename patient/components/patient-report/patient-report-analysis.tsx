@@ -24,17 +24,17 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/components/ui/hover-card';
-import { 
-  Tooltip as TooltipComponent, 
-  TooltipTrigger, 
-  TooltipContent 
+import {
+  Tooltip as TooltipComponent,
+  TooltipTrigger,
+  TooltipContent
 } from '@/components/ui/tooltip';
 import { Dialog, DialogTrigger, DialogContent } from '@/components/ui/dialog';
-import { 
-  Tabs, 
-  TabsContent, 
-  TabsList, 
-  TabsTrigger 
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger
 } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -44,20 +44,20 @@ import { Progress } from '@/components/ui/progress';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { 
-  FileUpload, 
-  FileText, 
-  Microscope, 
-  PieChart, 
-  Activity, 
-  AlertTriangle, 
-  Shield, 
-  FileCheck, 
+import {
+
+  FileText,
+  Microscope,
+  PieChart,
+  Activity,
+  AlertTriangle,
+  Shield,
+  FileCheck,
   Upload,
   List,
-  BarChart4, 
-  LucideHeartPulse, 
-  Dna, 
+  BarChart4,
+  LucideHeartPulse,
+  Dna,
   Beaker,
   HeartPulse,
   Trophy,
@@ -212,7 +212,7 @@ interface ReportData {
 async function extractTextFromFile(file: File): Promise<string> {
   try {
     console.log(`Extracting text from ${file.type} file: ${file.name}`);
-    
+
     // Handle PDF files
     if (file.type === 'application/pdf') {
       console.log('Processing PDF file...');
@@ -221,9 +221,9 @@ async function extractTextFromFile(file: File): Promise<string> {
         const pdfDoc = await PDFDocument.load(arrayBuffer);
         const pages = pdfDoc.getPages();
         let text = '';
-        
+
         console.log(`PDF has ${pages.length} pages`);
-        
+
         for (let i = 0; i < pages.length; i++) {
           try {
             const page = pages[i];
@@ -233,19 +233,19 @@ async function extractTextFromFile(file: File): Promise<string> {
             console.warn(`Error extracting text from page ${i + 1}:`, pageError);
           }
         }
-        
+
         if (!text || text.trim().length === 0) {
           console.warn('No text extracted from PDF - may be image-based');
           // Create sample medical text for demo purposes
           return generateSampleMedicalText(file.name);
         }
-        
+
         return text;
       } catch (pdfError) {
         console.error('Error processing PDF:', pdfError);
         return generateSampleMedicalText(file.name);
       }
-    } 
+    }
     // Handle image files 
     else if (file.type.startsWith('image/')) {
       console.log('Processing image file - using sample data for demo');
@@ -277,7 +277,7 @@ async function extractTextFromFile(file: File): Promise<string> {
 // Helper function to generate sample medical text for demo purposes
 function generateSampleMedicalText(filename: string): string {
   const lowerFilename = filename.toLowerCase();
-  
+
   // Generate different sample data based on filename hints
   if (lowerFilename.includes('blood') || lowerFilename.includes('lab')) {
     return `
@@ -380,7 +380,7 @@ async function analyzeWithAI(text: string) {
   try {
     console.log('Starting AI analysis...');
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-    
+
     // Create a more specific and detailed prompt
     const prompt = `
       You are a medical expert AI assistant. Analyze the following medical report and provide a detailed, structured analysis.
@@ -419,38 +419,38 @@ async function analyzeWithAI(text: string) {
     `;
 
     console.log('Sending request to Gemini API...');
-    
+
     // Set a timeout for the API call
-    const timeoutPromise = new Promise((_, reject) => 
+    const timeoutPromise = new Promise((_, reject) =>
       setTimeout(() => reject(new Error('AI analysis timed out after 25 seconds')), 25000)
     );
-    
+
     // Make the API call with timeout
     try {
       const resultPromise = model.generateContent({
         contents: [{ role: "user", parts: [{ text: prompt }] }]
       });
       const result = await Promise.race([resultPromise, timeoutPromise]);
-      
+
       // Handle the response
       if (!result) {
         console.error('Empty response from AI model');
         throw new Error('Empty response from AI model');
       }
-      
+
       const response = await result.response;
       const analysisText = response.text();
-      
+
       if (!analysisText || analysisText.trim().length === 0) {
         console.error('Empty text response from AI model');
         throw new Error('Empty text response from AI model');
       }
-      
+
       console.log('AI analysis completed successfully');
       return analysisText;
     } catch (apiError: any) {
       console.error('Error in API call:', apiError);
-      
+
       // Check for specific API errors
       if (apiError.message?.includes('400') || apiError.message?.includes('invalid request')) {
         console.warn('Invalid request to Gemini API - input may be too long or contain invalid content');
@@ -459,14 +459,14 @@ async function analyzeWithAI(text: string) {
       } else if (apiError.message?.includes('429') || apiError.message?.includes('quota')) {
         console.warn('API quota exceeded or rate limited');
       }
-      
+
       // If API call fails, fall back to mock analysis
       console.warn('Using mock analysis due to API error');
       return generateMockAnalysis(text);
     }
   } catch (error: any) {
     console.error('Error in analysis process:', error);
-    
+
     // Always fall back to mock analysis regardless of error type
     console.warn('Using mock analysis due to error');
     return generateMockAnalysis(text);
@@ -476,51 +476,51 @@ async function analyzeWithAI(text: string) {
 // Mock analysis function for testing without API key
 function generateMockAnalysis(text: string) {
   console.log('Generating mock analysis for:', text.substring(0, 100) + '...');
-  
+
   // Extract some keywords from the text to make it seem like we analyzed it
   const lowerText = text.toLowerCase();
   const hasBloodKeywords = lowerText.includes('blood') || lowerText.includes('hemoglobin') || lowerText.includes('wbc');
   const hasCardiacKeywords = lowerText.includes('heart') || lowerText.includes('cardiac') || lowerText.includes('ecg');
   const hasLiverKeywords = lowerText.includes('liver') || lowerText.includes('alt') || lowerText.includes('ast');
-  
+
   // Generate a somewhat relevant mock analysis
   return `
 # SUMMARY
-${hasBloodKeywords ? 'Blood test results show several values within normal range, with a few items requiring attention.' : 
- hasCardiacKeywords ? 'Cardiac examination results indicate generally good heart function with minor abnormalities.' :
- hasLiverKeywords ? 'Liver function tests show moderate elevation in enzymes suggesting possible hepatic stress.' :
- 'Medical report analysis shows mostly normal results with some areas requiring follow-up.'}
+${hasBloodKeywords ? 'Blood test results show several values within normal range, with a few items requiring attention.' :
+      hasCardiacKeywords ? 'Cardiac examination results indicate generally good heart function with minor abnormalities.' :
+        hasLiverKeywords ? 'Liver function tests show moderate elevation in enzymes suggesting possible hepatic stress.' :
+          'Medical report analysis shows mostly normal results with some areas requiring follow-up.'}
 
 # DIAGNOSIS
-${hasBloodKeywords ? '- Mild anemia possible\n- Iron deficiency cannot be ruled out' : 
- hasCardiacKeywords ? '- Possible mild cardiac hypertrophy\n- Normal sinus rhythm' :
- hasLiverKeywords ? '- Non-alcoholic fatty liver disease (NAFLD) possible\n- Hepatic enzyme elevation' :
- '- General good health with minor concerns\n- Vitamin D deficiency possible'}
+${hasBloodKeywords ? '- Mild anemia possible\n- Iron deficiency cannot be ruled out' :
+      hasCardiacKeywords ? '- Possible mild cardiac hypertrophy\n- Normal sinus rhythm' :
+        hasLiverKeywords ? '- Non-alcoholic fatty liver disease (NAFLD) possible\n- Hepatic enzyme elevation' :
+          '- General good health with minor concerns\n- Vitamin D deficiency possible'}
 
 # ABNORMAL RESULTS
-${hasBloodKeywords ? '- Hemoglobin: Slightly below range (12.1 g/dL)\n- Ferritin: Low (15 ng/mL)' : 
- hasCardiacKeywords ? '- LVH: Mildly elevated\n- QT interval: Upper limit of normal' :
- hasLiverKeywords ? '- ALT: Elevated (63 U/L)\n- AST: Elevated (52 U/L)' :
- '- Vitamin D: Below optimal range\n- HDL: Slightly low'}
+${hasBloodKeywords ? '- Hemoglobin: Slightly below range (12.1 g/dL)\n- Ferritin: Low (15 ng/mL)' :
+      hasCardiacKeywords ? '- LVH: Mildly elevated\n- QT interval: Upper limit of normal' :
+        hasLiverKeywords ? '- ALT: Elevated (63 U/L)\n- AST: Elevated (52 U/L)' :
+          '- Vitamin D: Below optimal range\n- HDL: Slightly low'}
 
 # RECOMMENDATIONS
 - Schedule follow-up appointment in 3 months
 - Complete recommended diagnostic tests
 - Consider consultation with specialist
-${hasBloodKeywords ? '- Iron supplementation may be beneficial' : 
- hasCardiacKeywords ? '- Cardiac stress test recommended' :
- hasLiverKeywords ? '- Ultrasound of liver recommended' :
- '- Increase dietary sources of specific nutrients'}
+${hasBloodKeywords ? '- Iron supplementation may be beneficial' :
+      hasCardiacKeywords ? '- Cardiac stress test recommended' :
+        hasLiverKeywords ? '- Ultrasound of liver recommended' :
+          '- Increase dietary sources of specific nutrients'}
 
 # LIFESTYLE PLAN
 ## Diet
 - Increase intake of whole foods and vegetables
 - Reduce processed food consumption
 - Stay well hydrated (8 glasses of water daily)
-${hasBloodKeywords ? '- Consume iron-rich foods like spinach and red meat' : 
- hasCardiacKeywords ? '- Reduce sodium intake\n- Consider Mediterranean diet' :
- hasLiverKeywords ? '- Limit alcohol consumption\n- Reduce high-fructose foods' :
- '- Add more plant-based proteins to diet'}
+${hasBloodKeywords ? '- Consume iron-rich foods like spinach and red meat' :
+      hasCardiacKeywords ? '- Reduce sodium intake\n- Consider Mediterranean diet' :
+        hasLiverKeywords ? '- Limit alcohol consumption\n- Reduce high-fructose foods' :
+          '- Add more plant-based proteins to diet'}
 
 ## Exercise
 - Aim for 150 minutes of moderate exercise weekly
@@ -690,43 +690,43 @@ export default function PatientReportAnalysis() {
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
-    
+
     // Convert FileList to array
     const fileArray = Array.from(files);
-    
+
     // Validate files manually
     const validFiles = fileArray.filter(file => {
       const isValidType = ['application/pdf', 'image/jpeg', 'image/png'].includes(file.type) ||
-                        ['.pdf', '.jpg', '.jpeg', '.png'].some(ext => file.name.toLowerCase().endsWith(ext));
+        ['.pdf', '.jpg', '.jpeg', '.png'].some(ext => file.name.toLowerCase().endsWith(ext));
       const isValidSize = file.size <= 10485760; // 10MB
-      
+
       if (!isValidType) {
         toast.error(`File "${file.name}" is not a PDF, JPG, or PNG.`);
       }
       if (!isValidSize) {
         toast.error(`File "${file.name}" exceeds the 10MB size limit.`);
       }
-      
+
       return isValidType && isValidSize;
     });
-    
+
     if (validFiles.length === 0) return;
-    
+
     // Process valid files
     setIsUploading(true);
     setUploadProgress(10);
-    
+
     try {
       // Process each file
       for (let i = 0; i < validFiles.length; i++) {
         await processFile(validFiles[i]);
       }
-      
+
       // Update UI and show success
       setUploadProgress(100);
       toast.success(`Successfully processed ${validFiles.length} ${validFiles.length === 1 ? 'file' : 'files'}`);
       setActiveTab('reports');
-      
+
       // Trigger confetti
       confetti({
         particleCount: 100,
@@ -737,7 +737,7 @@ export default function PatientReportAnalysis() {
       handleError(error);
     } finally {
       setIsUploading(false);
-      
+
       // Reset file input
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
@@ -784,7 +784,7 @@ export default function PatientReportAnalysis() {
           console.log('Analysis timeout - forcing completion');
           setAiProgress(100);
           setIsAiAnalyzing(false);
-          
+
           // Create fallback report if analysis is stuck
           const fallbackReport = {
             id: Math.random().toString(36).substr(2, 9),
@@ -803,13 +803,13 @@ export default function PatientReportAnalysis() {
             }],
             recommendations: ['Review the analyzed report details.']
           };
-          
+
           // Add fallback report to list
           setReports(prev => [fallbackReport, ...prev]);
           toast.success('Report analysis completed');
         }
       }, 30000); // 30 second timeout
-      
+
       // Create loading animation with faster progress
       const loadingInterval = setInterval(() => {
         setAiProgress(prev => {
@@ -825,7 +825,7 @@ export default function PatientReportAnalysis() {
       try {
         text = await extractTextFromFile(file);
         console.log(`Successfully extracted ${text.length} characters of text from file`);
-        
+
         // If the text is empty or very short, add a message
         if (!text || text.length < 50) {
           console.warn('Extracted text is too short, may be unsuitable for analysis');
@@ -835,7 +835,7 @@ export default function PatientReportAnalysis() {
         console.error('Error extracting text:', extractError);
         text = `[Error extracting text from file: ${file.name}. File type: ${file.type}]`;
       }
-      
+
       // Analyze with AI
       console.log('Starting AI analysis of extracted text...');
       let analysis = '';
@@ -848,11 +848,11 @@ export default function PatientReportAnalysis() {
         analysis = generateMockAnalysis(text);
         console.log('Using mock analysis as fallback');
       }
-      
+
       // Generate visualizations
       console.log('Generating visualizations...');
       const visualizations = await generateVisualizations(analysis);
-      
+
       // Create new report
       console.log('Creating report structure...');
       const newReport = {
@@ -863,15 +863,15 @@ export default function PatientReportAnalysis() {
       // Add to reports with animation
       console.log('Adding report to list...');
       setReports(prev => [newReport, ...prev]);
-      
+
       // Clear timeout since we completed successfully
       clearTimeout(analysisTimeout);
-      
+
       // Show success animation
       clearInterval(loadingInterval);
       setAiProgress(100);
       setShowConfetti(true);
-      
+
       // Trigger confetti
       confetti({
         particleCount: 100,
@@ -880,7 +880,7 @@ export default function PatientReportAnalysis() {
       });
 
       console.log('File processing completed successfully!');
-      
+
       // Show success toast
       toast.success('Report analysis completed successfully!');
 
@@ -893,10 +893,10 @@ export default function PatientReportAnalysis() {
 
     } catch (error) {
       console.error('Error processing file:', error);
-      
+
       // Show error toast
       toast.error('An error occurred while analyzing the report');
-      
+
       // Create error report with more meaningful content
       const errorReport = {
         id: Math.random().toString(36).substr(2, 9),
@@ -913,13 +913,13 @@ export default function PatientReportAnalysis() {
           'Consider converting image-based reports to PDF with text'
         ]
       };
-      
+
       // Add error report to list
       setReports(prev => [errorReport, ...prev]);
-      
+
       // Complete the progress to avoid being stuck
       setAiProgress(100);
-      
+
       // Reset after a short delay
       setTimeout(() => {
         setIsAiAnalyzing(false);
@@ -934,19 +934,19 @@ export default function PatientReportAnalysis() {
     try {
       const canvas = await html2canvas(reportContainerRef.current);
       const pdf = new jsPDF('p', 'mm', 'a4');
-      
+
       // Add header
       pdf.setFontSize(20);
       pdf.text('Medical Report Analysis', 20, 20);
-      
+
       // Add content
       const imgData = canvas.toDataURL('image/png');
       pdf.addImage(imgData, 'PNG', 20, 40, 170, 200);
-      
+
       // Add footer
       pdf.setFontSize(10);
-      pdf.text('Generated by EcomedAI', 20, 280);
-      
+      pdf.text('Generated by VaidyaSetu', 20, 280);
+
       pdf.save('medical-report-analysis.pdf');
     } catch (error) {
       toast.error('Error generating PDF');
@@ -1054,7 +1054,7 @@ export default function PatientReportAnalysis() {
           Select Files
         </Button>
       </div>
-      
+
       {isUploading && (
         <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex flex-col items-center justify-center p-8 rounded-lg">
           <Loader2 className="w-10 h-10 text-primary animate-spin mb-4" />
@@ -1065,7 +1065,7 @@ export default function PatientReportAnalysis() {
           </div>
         </div>
       )}
-      
+
       {isAiAnalyzing && (
         <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex flex-col items-center justify-center p-8 rounded-lg">
           <Brain className="w-10 h-10 text-primary animate-pulse mb-4" />
@@ -1197,7 +1197,7 @@ export default function PatientReportAnalysis() {
       className="container mx-auto px-4 py-8"
     >
       {/* Header with animated background */}
-      <motion.div 
+      <motion.div
         className="relative mb-8 text-center p-8 rounded-lg bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10"
         animate={{
           backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
@@ -1208,7 +1208,7 @@ export default function PatientReportAnalysis() {
           ease: 'linear',
         }}
       >
-        <motion.h1 
+        <motion.h1
           className="text-4xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary-foreground"
           animate={{ scale: [1, 1.02, 1] }}
           transition={{ duration: 2, repeat: Infinity }}
@@ -1383,8 +1383,8 @@ export default function PatientReportAnalysis() {
                         </h3>
                         <div className="grid gap-4 sm:grid-cols-2">
                           {selectedReport.anomalies.map((anomaly, idx) => (
-                            <div 
-                              key={idx} 
+                            <div
+                              key={idx}
                               className={cn(
                                 "p-4 rounded-lg border",
                                 getStatusColor(anomaly.status)
@@ -1586,8 +1586,8 @@ export default function PatientReportAnalysis() {
                                     <span className="text-sm">Stress Level</span>
                                     <span className="text-sm font-medium">{selectedReport.aiAnalysis.mentalHealth?.stress}%</span>
                                   </div>
-                                  <Progress 
-                                    value={selectedReport.aiAnalysis.mentalHealth?.stress} 
+                                  <Progress
+                                    value={selectedReport.aiAnalysis.mentalHealth?.stress}
                                     className="h-2"
                                   />
                                 </div>
@@ -1596,8 +1596,8 @@ export default function PatientReportAnalysis() {
                                     <span className="text-sm">Anxiety Level</span>
                                     <span className="text-sm font-medium">{selectedReport.aiAnalysis.mentalHealth?.anxiety}%</span>
                                   </div>
-                                  <Progress 
-                                    value={selectedReport.aiAnalysis.mentalHealth?.anxiety} 
+                                  <Progress
+                                    value={selectedReport.aiAnalysis.mentalHealth?.anxiety}
                                     className="h-2"
                                   />
                                 </div>
@@ -1679,9 +1679,9 @@ export default function PatientReportAnalysis() {
                               <span className="text-sm">{anomaly.name}</span>
                               <span className="text-sm font-medium">{anomaly.value}</span>
                             </div>
-                            <Progress 
-                              value={parseFloat(anomaly.value)} 
-                              className="h-2" 
+                            <Progress
+                              value={parseFloat(anomaly.value)}
+                              className="h-2"
                             />
                             {anomaly.trend && (
                               <div className="flex items-center gap-1 mt-1">

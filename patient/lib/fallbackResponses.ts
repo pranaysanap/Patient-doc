@@ -5,9 +5,9 @@
 
 // Simple responses to common health questions
 const FALLBACK_RESPONSES: Record<string, string> = {
-  "default": "I'm Dr. Echo, your health assistant. I can help answer general health questions, but please consult a healthcare professional for medical advice.",
-  "hello": "Hello! I'm Dr. Echo, your EchoMed AI health assistant. How can I help you with your health today?",
-  "hi": "Hi there! I'm Dr. Echo. How can I assist you with your health concerns today?",
+  "default": "I'm Dr. Vaidya, your health assistant. I can help answer general health questions, but please consult a healthcare professional for medical advice.",
+  "hello": "Hello! I'm Dr. Vaidya, your VaidyaSetu AI health assistant. How can I help you with your health today?",
+  "hi": "Hi there! I'm Dr. Vaidya. How can I assist you with your health concerns today?",
   "how are you": "I'm functioning well and ready to assist you with health information. How can I help you today?",
   "headache": "Headaches can be caused by many factors including stress, dehydration, lack of sleep, or eyestrain. For occasional headaches, rest, hydration, and over-the-counter pain relievers may help. If you experience severe or recurring headaches, please consult a healthcare professional.",
   "cold": "Common cold symptoms include runny nose, sore throat, cough, and mild fever. Rest, staying hydrated, and over-the-counter medications can help manage symptoms. If symptoms persist for more than 10 days or become severe, consult a healthcare professional.",
@@ -28,24 +28,24 @@ const FALLBACK_RESPONSES: Record<string, string> = {
 export function generateFallbackResponse(message: string): string {
   // Convert message to lowercase for easier matching
   const lowerMessage = message.toLowerCase();
-  
+
   // Special handling for fitness tracker data
   if (lowerMessage.includes("fitness data") && lowerMessage.includes("goal")) {
     return generateFitnessResponse(message);
   }
-  
+
   // Check for exact matches first
   if (FALLBACK_RESPONSES[lowerMessage]) {
     return FALLBACK_RESPONSES[lowerMessage];
   }
-  
+
   // Check for keyword matches
   for (const [keyword, response] of Object.entries(FALLBACK_RESPONSES)) {
     if (keyword !== "default" && lowerMessage.includes(keyword)) {
       return response;
     }
   }
-  
+
   // If no matches, return default response
   return FALLBACK_RESPONSES["default"] + "\n\nI notice that the AI system is currently not connecting properly to provide a more specific answer to your question. This is a temporary backup response.";
 }
@@ -61,14 +61,14 @@ function generateFitnessResponse(message: string): string {
   const sleepMatch = message.match(/sleep: (\d+\.?\d*) hours \(goal: (\d+\.?\d*) hours\)/i);
   const caloriesConsumedMatch = message.match(/calories consumed today: (\d+) \(goal: (\d+)\)/i);
   const caloriesBurnedMatch = message.match(/calories burned today: (\d+)/i);
-  
+
   // Current weight and goal
   const currentWeight = weightMatch ? parseFloat(weightMatch[1]) : null;
   const weightGoal = weightMatch ? parseFloat(weightMatch[2]) : null;
-  
+
   // Build personalized response
   let response = "# Personalized Fitness Recommendations\n\n";
-  
+
   // Weight management section
   if (currentWeight && weightGoal) {
     const weightDiff = currentWeight - weightGoal;
@@ -95,12 +95,12 @@ function generateFitnessResponse(message: string): string {
       response += "- Monitor your weight weekly to catch any changes early\n\n";
     }
   }
-  
+
   // Activity recommendations
   if (stepsMatch) {
     const currentSteps = parseInt(stepsMatch[1]);
     const stepGoal = parseInt(stepsMatch[2]);
-    
+
     response += "## Activity Plan\n";
     if (currentSteps < stepGoal) {
       response += `You're ${stepGoal - currentSteps} steps away from your daily goal. `;
@@ -116,7 +116,7 @@ function generateFitnessResponse(message: string): string {
       response += "- Consider adding variety with hiking or jogging\n\n";
     }
   }
-  
+
   // Workout recommendations
   response += "## Recommended Workout Plan\n";
   response += "Based on your current metrics, here's a balanced weekly workout plan:\n\n";
@@ -127,14 +127,14 @@ function generateFitnessResponse(message: string): string {
   response += "- **Friday**: Cardio (interval training) - 25 minutes\n";
   response += "- **Saturday**: Strength training (lower body focus) - 45 minutes\n";
   response += "- **Sunday**: Active recovery (stretching, walking)\n\n";
-  
+
   // Nutrition recommendations
   response += "## Nutrition Tips\n";
   if (caloriesConsumedMatch && caloriesBurnedMatch) {
     const consumed = parseInt(caloriesConsumedMatch[1]);
     const burned = parseInt(caloriesBurnedMatch[1]);
     const calorieBalance = consumed - burned;
-    
+
     response += `Your current calorie balance is ${calorieBalance} calories. `;
     if (weightMatch && parseFloat(weightMatch[1]) > parseFloat(weightMatch[2])) {
       response += "For weight loss, aim for a moderate deficit of 300-500 calories.\n\n";
@@ -142,19 +142,19 @@ function generateFitnessResponse(message: string): string {
       response += "For maintenance, try to keep your calorie balance near zero.\n\n";
     }
   }
-  
+
   response += "Focus on these nutrition strategies:\n";
   response += "- Prioritize protein (0.7-1g per pound of body weight)\n";
   response += "- Eat plenty of vegetables and fruits (aim for half your plate)\n";
   response += "- Choose complex carbs (whole grains, beans, starchy vegetables)\n";
   response += "- Include healthy fats from sources like avocados, nuts, and olive oil\n";
   response += "- Stay hydrated with at least 64oz of water daily\n\n";
-  
+
   // Sleep recommendations
   if (sleepMatch) {
     const currentSleep = parseFloat(sleepMatch[1]);
     const sleepGoal = parseFloat(sleepMatch[2]);
-    
+
     response += "## Sleep Optimization\n";
     if (currentSleep < sleepGoal) {
       response += `You're getting ${currentSleep} hours of sleep, which is below your goal of ${sleepGoal} hours. `;
@@ -167,14 +167,14 @@ function generateFitnessResponse(message: string): string {
       response += "You're meeting your sleep goal, which is excellent for recovery and overall health!\n";
     }
   }
-  
+
   // Final note
   response += "\n## Progress Tracking\n";
   response += "Track your progress weekly rather than daily to account for normal fluctuations. ";
   response += "Adjust your plan as needed based on your results and how you feel.\n\n";
   response += "Remember that consistency is more important than perfection. ";
   response += "Small, sustainable changes will lead to long-term success.";
-  
+
   return response;
 }
 
@@ -190,14 +190,14 @@ export async function generateFallbackStreamingResponse(
     const fullResponse = generateFallbackResponse(message);
     let currentResponse = "";
     const words = fullResponse.split(" ");
-    
+
     // Function to add words with a delay
     const addWord = (index: number) => {
       if (index < words.length) {
         // Add the next word
         currentResponse += (index === 0 ? "" : " ") + words[index];
         onUpdate(currentResponse);
-        
+
         // Schedule the next word
         setTimeout(() => addWord(index + 1), 50);
       } else {
@@ -205,7 +205,7 @@ export async function generateFallbackStreamingResponse(
         resolve(fullResponse);
       }
     };
-    
+
     // Start adding words
     addWord(0);
   });

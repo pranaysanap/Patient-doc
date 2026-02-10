@@ -4,9 +4,9 @@ import React, { useState, useEffect } from 'react';
 
 // Super simple, client-side only responses that don't depend on any external API
 const EMERGENCY_RESPONSES: Record<string, string> = {
-  "default": "I'm Dr. Echo, your health assistant. I'm currently operating in emergency mode with limited responses. I can answer basic health questions, but please consult a healthcare professional for medical advice.",
-  "hello": "Hello! I'm Dr. Echo, your EchoMed AI health assistant. I'm currently in emergency mode, but I'll do my best to help you.",
-  "hi": "Hi there! I'm Dr. Echo. I'm currently using a limited response system, but I'll try to assist you.",
+  "default": "I'm Dr. Vaidya, your health assistant. I'm currently operating in emergency mode with limited responses. I can answer basic health questions, but please consult a healthcare professional for medical advice.",
+  "hello": "Hello! I'm Dr. Vaidya, your VaidyaSetu AI health assistant. I'm currently in emergency mode, but I'll do my best to help you.",
+  "hi": "Hi there! I'm Dr. Vaidya. I'm currently using a limited response system, but I'll try to assist you.",
   "headache": "Headaches can be caused by stress, dehydration, lack of sleep, or eyestrain. For occasional headaches, rest, hydration, and over-the-counter pain relievers may help. If you experience severe or recurring headaches, please consult a healthcare professional.",
   "cold": "Common cold symptoms include runny nose, sore throat, cough, and mild fever. Rest, staying hydrated, and over-the-counter medications can help manage symptoms. If symptoms persist for more than 10 days or become severe, consult a healthcare professional.",
   "fever": "Fever is often a sign that your body is fighting an infection. Rest, staying hydrated, and taking over-the-counter fever reducers can help. If your fever is high (above 103°F/39.4°C), persists for more than three days, or is accompanied by severe symptoms, seek medical attention.",
@@ -32,7 +32,7 @@ export default function EmergencyChat({ onClose }: EmergencyChatProps) {
     {
       id: 'welcome',
       role: 'assistant',
-      content: 'Hello! I\'m Dr. Echo, your EchoMed AI health assistant. I\'m currently operating in emergency mode with limited responses, but I\'ll do my best to help you with your health questions.',
+      content: 'Hello! I\'m Dr. Vaidya, your VaidyaSetu AI health assistant. I\'m currently operating in emergency mode with limited responses, but I\'ll do my best to help you with your health questions.',
       timestamp: new Date(),
     },
   ]);
@@ -49,19 +49,19 @@ export default function EmergencyChat({ onClose }: EmergencyChatProps) {
 
   const getResponse = (userMessage: string): string => {
     const lowerMessage = userMessage.toLowerCase();
-    
+
     // Check for exact matches
     if (EMERGENCY_RESPONSES[lowerMessage]) {
       return EMERGENCY_RESPONSES[lowerMessage];
     }
-    
+
     // Check for keyword matches
     for (const [keyword, response] of Object.entries(EMERGENCY_RESPONSES)) {
       if (keyword !== 'default' && lowerMessage.includes(keyword)) {
         return response;
       }
     }
-    
+
     // Return default response
     return EMERGENCY_RESPONSES['default'];
   };
@@ -82,7 +82,7 @@ export default function EmergencyChat({ onClose }: EmergencyChatProps) {
 
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
-    
+
     // Add user message
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -90,14 +90,14 @@ export default function EmergencyChat({ onClose }: EmergencyChatProps) {
       content: inputValue,
       timestamp: new Date(),
     };
-    
+
     setMessages((prev) => [...prev, userMessage]);
     setInputValue('');
     setIsTyping(true);
-    
+
     // Get response
     const responseText = getResponse(inputValue);
-    
+
     // Create temporary message for typing effect
     const tempId = 'typing-' + Date.now();
     setMessages((prev) => [
@@ -109,25 +109,25 @@ export default function EmergencyChat({ onClose }: EmergencyChatProps) {
         timestamp: new Date(),
       },
     ]);
-    
+
     // Simulate typing
     let currentText = '';
     await simulateTyping(responseText, (text) => {
       currentText = text;
-      setMessages((prev) => 
-        prev.map((msg) => 
+      setMessages((prev) =>
+        prev.map((msg) =>
           msg.id === tempId ? { ...msg, content: text } : msg
         )
       );
     });
-    
+
     // Update with final message
-    setMessages((prev) => 
-      prev.map((msg) => 
+    setMessages((prev) =>
+      prev.map((msg) =>
         msg.id === tempId ? { ...msg, id: 'response-' + Date.now() } : msg
       )
     );
-    
+
     setIsTyping(false);
   };
 
@@ -152,13 +152,13 @@ export default function EmergencyChat({ onClose }: EmergencyChatProps) {
             </div>
             <div>
               <div className="font-medium text-white text-lg flex items-center gap-2">
-                Dr. Echo
+                Dr. Vaidya
                 <span className="bg-green-500 rounded-full w-3 h-3"></span>
               </div>
-              <div className="text-white text-xs opacity-80">EchoMed AI Health Assistant</div>
+              <div className="text-white text-xs opacity-80">VaidyaSetu AI Health Assistant</div>
             </div>
           </div>
-          <button 
+          <button
             className="text-white hover:bg-blue-600 p-2 rounded-full"
             onClick={onClose}
           >
@@ -168,20 +168,19 @@ export default function EmergencyChat({ onClose }: EmergencyChatProps) {
             </svg>
           </button>
         </div>
-        
+
         {/* Messages */}
         <div id="emergency-chat-messages" className="flex-1 overflow-y-auto p-4 space-y-4">
           {messages.map((message) => (
-            <div 
-              key={message.id} 
+            <div
+              key={message.id}
               className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
             >
-              <div 
-                className={`max-w-[80%] rounded-lg p-3 ${
-                  message.role === 'user' 
-                    ? 'bg-blue-500 text-white' 
+              <div
+                className={`max-w-[80%] rounded-lg p-3 ${message.role === 'user'
+                    ? 'bg-blue-500 text-white'
                     : 'bg-gray-800 text-white'
-                }`}
+                  }`}
               >
                 <div className="text-sm whitespace-pre-wrap">{message.content}</div>
                 <div className="text-xs opacity-70 mt-1">
@@ -202,7 +201,7 @@ export default function EmergencyChat({ onClose }: EmergencyChatProps) {
             </div>
           )}
         </div>
-        
+
         {/* Input */}
         <div className="p-4 border-t border-gray-800">
           <div className="text-xs text-gray-400 mb-2">

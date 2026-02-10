@@ -7,7 +7,7 @@ export default function SignUpPage() {
                 <div className="text-center mb-8">
                     <h1 className="text-3xl font-bold mb-2">Create Your Account</h1>
                     <p className="text-muted-foreground">
-                        Join EchoMed and start your health journey today
+                        Join VaidyaSetu and start your health journey today
                     </p>
                 </div>
                 <SignUp

@@ -4,9 +4,13 @@ import { motion } from "framer-motion";
 import { Activity, Calendar, Heart, Home, MessageSquare, Settings, User, Wind, CloudSun } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import Link from "next/link";
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import dynamic from "next/dynamic";
+
+const HeartRateChart = dynamic(() => import("@/components/dashboard/heart-rate-chart"), { ssr: false });
+import { doctorConfig } from "@/lib/doctor-config";
 
 const heartData = [
   { time: "10:00", bpm: 72 },
@@ -25,7 +29,7 @@ export default function Dashboard() {
       <aside className="w-64 border-r border-border/50 hidden md:block relative z-10">
         <div className="p-6">
           <Link href="/" className="flex items-center gap-2 font-bold text-xl mb-8 text-primary">
-            <Activity className="h-6 w-6" /> EchoMed
+            <Activity className="h-6 w-6" /> VaidyaSetu
           </Link>
 
           <nav className="space-y-2">
@@ -34,7 +38,15 @@ export default function Dashboard() {
               { icon: Activity, label: "Vitals History" },
               { icon: MessageSquare, label: "AI Assistant" },
               { icon: Activity, label: "AI Vision Analysis", href: "/vision" },
-              { icon: Calendar, label: "Appointments" },
+              { icon: Calendar, label: "Doctor Appointments", href: "/doctor-appointments" },
+              { icon: Heart, label: "Hospital Locator", href: "/hospital-locator" },
+              { icon: User, label: "Patient Report Analysis", href: "/patient-report" },
+              { icon: Wind, label: "Health Hub", href: "/health-hub" },
+              { icon: CloudSun, label: "Mental Wellness", href: "/mental-wellness" },
+              { icon: Activity, label: "Fitness Tracker", href: "/fitness-tracker" },
+              { icon: Heart, label: "Menstruation Tracker", href: "/menstruation-tracker" },
+              { icon: Home, label: "Maps", href: "/maps" },
+              { icon: Activity, label: "Learning Center", href: "/learning-center" },
               { icon: Settings, label: "Settings" },
             ].map((item) => (
               <Link
@@ -192,8 +204,8 @@ export default function Dashboard() {
           <h3 className="text-xl font-semibold mb-4">Upcoming Appointments</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {[
-              { name: "Dr. Sarah Smith", type: "Cardiologist", date: "Tomorrow, 10:00 AM", img: "/placeholder-dr1.jpg" },
-              { name: "Dr. James Wilson", type: "General Checkup", date: "Jan 24, 2:30 PM", img: "/placeholder-dr2.jpg" }
+              { name: doctorConfig.name, type: "General Consultation", date: "Tomorrow, 10:00 AM", img: "/placeholder-dr1.jpg" },
+              { name: doctorConfig.name, type: "Follow-up", date: "Jan 24, 2:30 PM", img: "/placeholder-dr1.jpg" }
             ].map((apt, i) => (
               <div key={i} className="flex items-center justify-between p-4 rounded-xl border border-border/50 bg-card hover:bg-secondary/5 transition-colors">
                 <div className="flex items-center gap-4">
