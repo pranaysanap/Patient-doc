@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { AuthProvider } from '@/components/auth-provider';
 import { ThemeProvider } from '@/components/theme-provider';
+import { VaidyaProvider } from '@/components/ai-assistant/vaidya-context';
 import { Toaster } from '@/components/ui/toaster';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
@@ -31,6 +32,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <VaidyaProvider>
             <div className="flex min-h-screen flex-col">
               <Header />
               <main className="flex-1">{children}</main>
@@ -40,6 +42,7 @@ export default function RootLayout({
             <SOSButton />
             <Toaster />
             <SonnerToaster position="top-right" closeButton theme="dark" richColors />
+            </VaidyaProvider>
           </ThemeProvider>
         </AuthProvider>
       </body>

@@ -198,16 +198,48 @@ const HospitalLocator: React.FC = () => {
         setLoading(true);
         setError(null);
 
-        // Always use Terna Engineering College as the static location (no GPS or IP detection)
-        const location = ternaCollegeLocation;
-        setUserLocation(location);
-        setMapCenter(location);
-        setLocationName('Terna Engineering College, Nerul');
-        if (mapRef.current) {
-            mapRef.current.panTo(location);
-            mapRef.current.setZoom(14);
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const location: Location = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                    };
+                    setUserLocation(location);
+                    setMapCenter(location);
+                    setLocationName('📍 Your Current Location');
+                    if (mapRef.current) {
+                        mapRef.current.panTo(location);
+                        mapRef.current.setZoom(14);
+                    }
+                    searchNearbyHospitals(location);
+                },
+                () => {
+                    // GPS denied or failed — fallback to default location
+                    const location = ternaCollegeLocation;
+                    setUserLocation(location);
+                    setMapCenter(location);
+                    setLocationName('Terna Engineering College, Nerul (default)');
+                    if (mapRef.current) {
+                        mapRef.current.panTo(location);
+                        mapRef.current.setZoom(14);
+                    }
+                    searchNearbyHospitals(location);
+                },
+                { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }
+            );
+        } else {
+            // Geolocation not supported — fallback
+            const location = ternaCollegeLocation;
+            setUserLocation(location);
+            setMapCenter(location);
+            setLocationName('Terna Engineering College, Nerul (default)');
+            if (mapRef.current) {
+                mapRef.current.panTo(location);
+                mapRef.current.setZoom(14);
+            }
+            searchNearbyHospitals(location);
         }
-        searchNearbyHospitals(location);
     }, [searchNearbyHospitals]);
 
     const searchAtMapCenter = useCallback(() => {
@@ -276,13 +308,14 @@ const HospitalLocator: React.FC = () => {
     };
 
     const getMarkerIcon = (type: 'government' | 'private' | 'unknown') => {
-        const color = type === 'government' ? '#10b981' : '#14b8a6';
+        const color = type === 'government' ? '#dc2626' : '#ef4444';
+        const lightColor = type === 'government' ? '#f87171' : '#fca5a5';
         return {
             url: 'data:image/svg+xml,' + encodeURIComponent(`
                 <svg width="48" height="56" viewBox="0 0 48 56" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <ellipse cx="24" cy="52" rx="10" ry="3" fill="rgba(0,0,0,0.2)"/>
                     <path d="M24 2C12.954 2 4 10.954 4 22c0 16 20 32 20 32s20-16 20-32C44 10.954 35.046 2 24 2z" fill="${color}"/>
-                    <path d="M24 4C13.507 4 6 11.954 6 22c0 14 18 28 18 28s18-14 18-28C42 11.954 34.493 4 24 4z" fill="${type === 'government' ? '#34d399' : '#5eead4'}"/>
+                    <path d="M24 4C13.507 4 6 11.954 6 22c0 14 18 28 18 28s18-14 18-28C42 11.954 34.493 4 24 4z" fill="${lightColor}"/>
                     <circle cx="24" cy="22" r="14" fill="white"/>
                     <rect x="21" y="12" width="6" height="20" rx="2" fill="${color}"/>
                     <rect x="14" y="19" width="20" height="6" rx="2" fill="${color}"/>

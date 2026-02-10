@@ -1,12 +1,40 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { FileText, Inbox } from "lucide-react";
-import { getPrescriptions } from "@/lib/prescriptions";
+import { FileText, Inbox, Loader2 } from "lucide-react";
+import { getPrescriptionsAsync, Prescription } from "@/lib/prescriptions";
 import PrescriptionCard from "./prescription-card";
 
 export default function PrescriptionList() {
-    const prescriptions = getPrescriptions();
+    const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const loadPrescriptions = async () => {
+            try {
+                setIsLoading(true);
+                const data = await getPrescriptionsAsync();
+                setPrescriptions(data);
+            } catch (err) {
+                console.error('Error loading prescriptions:', err);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        loadPrescriptions();
+    }, []);
+
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center min-h-[60vh]">
+                <div className="flex flex-col items-center gap-4">
+                    <Loader2 className="h-12 w-12 text-primary animate-spin" />
+                    <p className="text-lg font-medium">Loading Prescriptions...</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

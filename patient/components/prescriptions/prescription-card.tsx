@@ -18,7 +18,8 @@ export default function PrescriptionCard({ prescription, index }: PrescriptionCa
     const [showPdfViewer, setShowPdfViewer] = useState(false);
 
     const handleDownload = () => {
-        downloadPrescription(prescription);
+        // Open the viewer dialog which has the proper PDF download
+        setShowPdfViewer(true);
     };
 
     const handleView = () => {
@@ -86,7 +87,7 @@ export default function PrescriptionCard({ prescription, index }: PrescriptionCa
             <PdfViewerDialog
                 open={showPdfViewer}
                 onOpenChange={setShowPdfViewer}
-                pdfUrl={prescription.pdfUrl}
+                prescription={prescription}
                 title={`${prescription.prescriptionType} - ${prescription.doctorName}`}
             />
         </>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -13,40 +13,116 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon, Clock, MapPin, Star, Phone, Mail, Video, User, MessageSquare, Filter, Search } from "lucide-react";
+import { Calendar as CalendarIcon, Clock, MapPin, Star, Phone, Mail, Video, User, MessageSquare, Filter, Search, Loader2 } from "lucide-react";
 import { doctorConfig } from "@/lib/doctor-config";
 import { Sidebar } from "@/components/layout/sidebar";
+import * as patientApi from "@/lib/api";
 
 export default function DoctorAppointmentsPage() {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string | null>(null);
   const [appointmentType, setAppointmentType] = useState<string>("in-person");
+  const [purpose, setPurpose] = useState<string>("");
+  const [isBooking, setIsBooking] = useState(false);
+  const [bookingSuccess, setBookingSuccess] = useState(false);
+
+  // Appointments from backend
+  const [upcomingAppointments, setUpcomingAppointments] = useState<any[]>([]);
+  const [pastAppointments, setPastAppointments] = useState<any[]>([]);
+  const [isLoadingAppointments, setIsLoadingAppointments] = useState(true);
 
   // Single doctor availability (mock data based on doctorConfig)
   const availability = ["09:00 AM", "10:00 AM", "11:30 AM", "02:00 PM", "04:30 PM", "06:00 PM"];
 
-  const upcomingAppointments = [
-    {
-      id: "apt-1",
-      doctor: doctorConfig.name,
-      specialty: doctorConfig.specialty,
-      date: "May 15, 2025",
-      time: "10:30 AM",
-      type: "In-person",
-      location: doctorConfig.location
-    }
-  ];
+  // Load appointments from backend
+  useEffect(() => {
+    const loadAppointments = async () => {
+      try {
+        setIsLoadingAppointments(true);
+        const response = await patientApi.fetchMyAppointments();
+        if (response.success && response.data) {
+          const upcoming = response.data
+            .filter((a: any) => ['pending', 'confirmed'].includes(a.status))
+            .map((a: any) => ({
+              id: a.appointmentId,
+              doctor: doctorConfig.name,
+              specialty: doctorConfig.specialty,
+              date: new Date(a.appointmentDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+              time: new Date(a.appointmentDate).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }),
+              type: a.type === 'Online' ? 'Video Call' : 'In-person',
+              location: a.type === 'In-Person' ? doctorConfig.location : undefined,
+              status: a.status,
+              purpose: a.purpose,
+            }));
+          const past = response.data
+            .filter((a: any) => ['completed', 'cancelled'].includes(a.status))
+            .map((a: any) => ({
+              id: a.appointmentId,
+              doctor: doctorConfig.name,
+              specialty: doctorConfig.specialty,
+              date: new Date(a.appointmentDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+              time: new Date(a.appointmentDate).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }),
+              type: a.type,
+              status: a.status,
+              report: a.consultationReport,
+            }));
+          setUpcomingAppointments(upcoming);
+          setPastAppointments(past);
+        }
+      } catch (err) {
+        console.error('Error loading appointments:', err);
+        // Keep default mock if backend unavailable
+        setUpcomingAppointments([{
+          id: "apt-1",
+          doctor: doctorConfig.name,
+          specialty: doctorConfig.specialty,
+          date: "May 15, 2025",
+          time: "10:30 AM",
+          type: "In-person",
+          location: doctorConfig.location
+        }]);
+      } finally {
+        setIsLoadingAppointments(false);
+      }
+    };
+    loadAppointments();
+  }, [bookingSuccess]);
 
   const handleTimeSlotSelect = (timeSlot: string) => {
     setSelectedTimeSlot(timeSlot);
   };
 
-  const handleBookAppointment = () => {
-    // In a real app, this would send the appointment data to a backend
-    alert(`Appointment booked with ${doctorConfig.name} on ${format(date!, 'PPP')} at ${selectedTimeSlot}`);
+  const handleBookAppointment = async () => {
+    if (!date || !selectedTimeSlot) return;
 
-    // Reset selection
-    setSelectedTimeSlot(null);
+    setIsBooking(true);
+    try {
+      const appointmentDate = new Date(date);
+      // Parse the time slot
+      const [time, meridiem] = selectedTimeSlot.split(' ');
+      const [hours, minutes] = time.split(':');
+      let hour = parseInt(hours);
+      if (meridiem === 'PM' && hour !== 12) hour += 12;
+      if (meridiem === 'AM' && hour === 12) hour = 0;
+      appointmentDate.setHours(hour, parseInt(minutes), 0, 0);
+
+      await patientApi.bookAppointment({
+        appointmentDate: appointmentDate.toISOString(),
+        type: appointmentType === 'video' ? 'Online' : 'In-Person',
+        purpose: purpose || 'Consultation',
+        notes: purpose,
+      });
+
+      setBookingSuccess(true);
+      setSelectedTimeSlot(null);
+      setPurpose('');
+      setTimeout(() => setBookingSuccess(false), 3000);
+    } catch (err) {
+      console.error('Error booking appointment:', err);
+      alert('Failed to book appointment. Please try again.');
+    } finally {
+      setIsBooking(false);
+    }
   };
 
   return (
@@ -156,15 +232,31 @@ export default function DoctorAppointmentsPage() {
 
                       <div className="space-y-2">
                         <Label>Reason for Visit</Label>
-                        <Textarea placeholder="Briefly describe your symptoms or reason for the appointment" />
+                        <Textarea
+                          placeholder="Briefly describe your symptoms or reason for the appointment"
+                          value={purpose}
+                          onChange={(e) => setPurpose(e.target.value)}
+                        />
                       </div>
+
+                      {bookingSuccess && (
+                        <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20 text-green-600 text-sm font-medium">
+                          Appointment booked successfully! Your doctor will confirm shortly.
+                        </div>
+                      )}
 
                       <Button
                         className="w-full mt-4"
-                        disabled={!selectedTimeSlot || !date}
+                        disabled={!selectedTimeSlot || !date || isBooking}
                         onClick={handleBookAppointment}
                       >
-                        Confirm Appointment
+                        {isBooking ? (
+                          <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Booking...</>
+                        ) : bookingSuccess ? (
+                          'Booked!'
+                        ) : (
+                          'Confirm Appointment'
+                        )}
                       </Button>
                     </CardContent>
                   </Card>
@@ -243,39 +335,83 @@ export default function DoctorAppointmentsPage() {
               <div className="space-y-6">
                 <h2 className="text-xl font-semibold">Appointment History</h2>
 
-                <Card>
-                  <CardContent className="p-6">
-                    <div className="space-y-6">
-                      <div className="border-b pb-4">
-                        <div className="flex justify-between items-start mb-2">
-                          <div>
-                            <h3 className="font-medium">{doctorConfig.name}</h3>
-                            <p className="text-sm text-muted-foreground">{doctorConfig.specialty}</p>
+                {pastAppointments.length > 0 ? (
+                  <div className="space-y-4">
+                    {pastAppointments.map((apt: any) => (
+                      <Card key={apt.id}>
+                        <CardContent className="p-6">
+                          <div className="border-b pb-4 last:border-b-0 last:pb-0">
+                            <div className="flex justify-between items-start mb-2">
+                              <div>
+                                <h3 className="font-medium">{apt.doctor}</h3>
+                                <p className="text-sm text-muted-foreground">{apt.specialty}</p>
+                              </div>
+                              <Badge variant="outline">{apt.status === 'completed' ? 'Completed' : 'Cancelled'}</Badge>
+                            </div>
+                            <div className="flex items-center text-sm mb-1">
+                              <CalendarIcon className="h-4 w-4 mr-2 text-muted-foreground" />
+                              <span>{apt.date}</span>
+                            </div>
+                            <div className="flex items-center text-sm">
+                              <Clock className="h-4 w-4 mr-2 text-muted-foreground" />
+                              <span>{apt.time}</span>
+                            </div>
+                            {apt.report?.findings && (
+                              <div className="mt-3 p-3 rounded-lg bg-muted/50 text-sm">
+                                <p className="font-medium mb-1">Doctor's Notes:</p>
+                                <p className="text-muted-foreground">{apt.report.findings}</p>
+                              </div>
+                            )}
+                            <div className="flex gap-2 mt-4">
+                              <Button variant="outline" size="sm">
+                                <User className="h-4 w-4 mr-2" />
+                                View Summary
+                              </Button>
+                              <Button variant="outline" size="sm">
+                                <MessageSquare className="h-4 w-4 mr-2" />
+                                Message Doctor
+                              </Button>
+                            </div>
                           </div>
-                          <Badge variant="outline">Completed</Badge>
-                        </div>
-                        <div className="flex items-center text-sm mb-1">
-                          <CalendarIcon className="h-4 w-4 mr-2 text-muted-foreground" />
-                          <span>February 15, 2025</span>
-                        </div>
-                        <div className="flex items-center text-sm">
-                          <Clock className="h-4 w-4 mr-2 text-muted-foreground" />
-                          <span>10:30 AM</span>
-                        </div>
-                        <div className="flex gap-2 mt-4">
-                          <Button variant="outline" size="sm">
-                            <User className="h-4 w-4 mr-2" />
-                            View Summary
-                          </Button>
-                          <Button variant="outline" size="sm">
-                            <MessageSquare className="h-4 w-4 mr-2" />
-                            Message Doctor
-                          </Button>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                ) : (
+                  <Card>
+                    <CardContent className="p-6">
+                      <div className="space-y-6">
+                        <div className="border-b pb-4">
+                          <div className="flex justify-between items-start mb-2">
+                            <div>
+                              <h3 className="font-medium">{doctorConfig.name}</h3>
+                              <p className="text-sm text-muted-foreground">{doctorConfig.specialty}</p>
+                            </div>
+                            <Badge variant="outline">Completed</Badge>
+                          </div>
+                          <div className="flex items-center text-sm mb-1">
+                            <CalendarIcon className="h-4 w-4 mr-2 text-muted-foreground" />
+                            <span>February 15, 2025</span>
+                          </div>
+                          <div className="flex items-center text-sm">
+                            <Clock className="h-4 w-4 mr-2 text-muted-foreground" />
+                            <span>10:30 AM</span>
+                          </div>
+                          <div className="flex gap-2 mt-4">
+                            <Button variant="outline" size="sm">
+                              <User className="h-4 w-4 mr-2" />
+                              View Summary
+                            </Button>
+                            <Button variant="outline" size="sm">
+                              <MessageSquare className="h-4 w-4 mr-2" />
+                              Message Doctor
+                            </Button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                )}
               </div>
             </TabsContent>
           </Tabs>
