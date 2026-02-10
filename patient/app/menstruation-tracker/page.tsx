@@ -43,6 +43,7 @@ import {
   BarChart,
   History
 } from "lucide-react";
+import { Sidebar } from "@/components/layout/sidebar";
 import SymptomsTracker from "./components/SymptomsTracker";
 import CycleVisualizer from "./components/CycleVisualizer";
 import ClinicLocator from "./components/ClinicLocator";
@@ -300,22 +301,22 @@ export default function MenstruationTracker() {
           <ScrollArea className="h-[500px] w-full">
             <Table className="cycle-history-table">
               <TableHeader>
-                <TableRow className="bg-gradient-to-r from-pink-50 to-purple-50 dark:from-pink-900/20 dark:to-purple-900/20">
-                  <TableHead className="font-semibold text-pink-700 dark:text-pink-300">Start Date</TableHead>
-                  <TableHead className="font-semibold text-purple-700 dark:text-purple-300">End Date</TableHead>
-                  <TableHead className="font-semibold text-blue-700 dark:text-blue-300">Length</TableHead>
-                  <TableHead className="font-semibold text-orange-700 dark:text-orange-300">Avg Pain</TableHead>
-                  <TableHead className="font-semibold text-green-700 dark:text-green-300">Mood</TableHead>
-                  <TableHead className="font-semibold text-indigo-700 dark:text-indigo-300">Symptoms</TableHead>
+                <TableRow className="bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20">
+                  <TableHead className="font-semibold text-white dark:text-white">Start Date</TableHead>
+                  <TableHead className="font-semibold text-white dark:text-white">End Date</TableHead>
+                  <TableHead className="font-semibold text-white dark:text-white">Length</TableHead>
+                  <TableHead className="font-semibold text-white dark:text-white">Avg Pain</TableHead>
+                  <TableHead className="font-semibold text-white dark:text-white">Mood</TableHead>
+                  <TableHead className="font-semibold text-white dark:text-white">Symptoms</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {cycleHistory.map((cycle, index) => (
                   <TableRow key={cycle.startDate.toISOString()}
-                    className="analysis-card hover:bg-gradient-to-r hover:from-pink-50/50 hover:to-purple-50/50 
-                    dark:hover:from-pink-900/20 dark:hover:to-purple-900/20 transition-colors">
-                    <TableCell className="font-medium text-pink-600 dark:text-pink-300">{formatDate(cycle.startDate)}</TableCell>
-                    <TableCell className="font-medium text-purple-600 dark:text-purple-300">{formatDate(cycle.endDate)}</TableCell>
+                    className="analysis-card hover:bg-gradient-to-r hover:from-emerald-50/50 hover:to-teal-50/50 
+                    dark:hover:from-emerald-900/20 dark:hover:to-teal-900/20 transition-colors">
+                    <TableCell className="font-medium text-white dark:text-white">{formatDate(cycle.startDate)}</TableCell>
+                    <TableCell className="font-medium text-white dark:text-white">{formatDate(cycle.endDate)}</TableCell>
                     <TableCell>
                       <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
                         {cycle.length} days
@@ -448,20 +449,20 @@ export default function MenstruationTracker() {
                   {cycleHistory.slice(-5).map((cycle, index) => (
                     <div
                       key={cycle.startDate.toISOString()}
-                      className={`p-3 rounded-lg ${index % 2 === 0 ? 'bg-purple-50/50 dark:bg-purple-900/30' : 'bg-pink-50/50 dark:bg-pink-900/30'
+                      className={`p-3 rounded-lg ${index % 2 === 0 ? 'bg-emerald-50/50 dark:bg-emerald-900/30' : 'bg-teal-50/50 dark:bg-teal-900/30'
                         }`}
                     >
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm font-medium text-purple-700 dark:text-purple-300">
+                        <span className="text-sm font-medium text-white dark:text-white">
                           {formatDate(cycle.startDate)}
                         </span>
-                        <span className="text-sm font-semibold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                        <span className="text-sm font-semibold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
                           {cycle.averagePainLevel}/10
                         </span>
                       </div>
                       <div className="h-2 w-full rounded-full bg-gray-100 dark:bg-gray-800">
                         <div
-                          className="h-full rounded-full bg-gradient-to-r from-purple-500 to-pink-500"
+                          className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-500"
                           style={{
                             width: `${cycle.averagePainLevel * 10}%`,
                           }}
@@ -481,550 +482,555 @@ export default function MenstruationTracker() {
   };
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      {notification.visible && (
-        <div className="fixed top-4 right-4 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-100 px-4 py-2 rounded-lg shadow-lg z-50 animate-fade-in-out">
-          {notification.message}
-        </div>
-      )}
-
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="relative"
-      >
-        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-pink-200/30 to-purple-200/20 dark:from-pink-900/20 dark:to-purple-900/10 rounded-full blur-3xl -z-10" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-blue-200/30 to-purple-200/20 dark:from-blue-900/20 dark:to-purple-900/10 rounded-full blur-3xl -z-10" />
-
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
-              Menstruation Cycle Tracker
-            </h1>
-            <p className="text-muted-foreground mt-2">Track, understand, and nurture your menstrual health</p>
-          </div>
-          <Button variant="outline" className="gap-2">
-            <Bell className="h-4 w-4 text-pink-500" />
-            Set Reminders
-          </Button>
-        </div>
-      </motion.div>
-
-      <Tabs defaultValue="daily-log" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3 bg-gradient-to-r from-pink-50 to-purple-50 dark:from-pink-950/30 dark:to-purple-900/20 p-1 rounded-lg">
-          <TabsTrigger value="daily-log" className="flex items-center gap-2 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-900 data-[state=active]:text-pink-600">
-            <CalendarDays className="h-4 w-4" />
-            Daily Log
-          </TabsTrigger>
-          <TabsTrigger value="cycle-view" className="flex items-center gap-2 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-900 data-[state=active]:text-purple-600">
-            <LineChart className="h-4 w-4" />
-            Cycle View
-          </TabsTrigger>
-          <TabsTrigger value="find-care" className="flex items-center gap-2 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-900 data-[state=active]:text-blue-600">
-            <Heart className="h-4 w-4" />
-            Find Care
-          </TabsTrigger>
-          <TabsTrigger value="history" className="flex items-center gap-2">
-            <History className="h-4 w-4" />
-            History
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="daily-log" className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <Card className="overflow-hidden border-0 shadow-lg bg-gradient-to-br from-white to-pink-50/50 dark:from-slate-950 dark:to-pink-900/10">
-                <CardHeader className="border-b border-pink-100 dark:border-pink-900/20">
-                  <CardTitle className="flex items-center gap-2">
-                    <CalendarIcon className="h-5 w-5 text-pink-500" />
-                    Calendar
-                  </CardTitle>
-                  <CardDescription>Track your cycle and symptoms</CardDescription>
-                </CardHeader>
-                <CardContent className="p-4">
-                  <Calendar
-                    mode="single"
-                    selected={selectedDate}
-                    onSelect={(date) => {
-                      if (date) {
-                        setSelectedDate(date);
-                        const existingLog = cycleDays.find(
-                          day => day.date.toDateString() === date.toDateString()
-                        );
-                        if (existingLog) {
-                          setFlow(existingLog.flow);
-                          setPainLevel(existingLog.painLevel);
-                          setMood(existingLog.mood);
-                          setSelectedSymptoms(existingLog.symptoms);
-                        } else {
-                          // Reset form for new entry
-                          setPainLevel(0);
-                          setFlow("medium");
-                          setMood("normal");
-                          setSelectedSymptoms([]);
-                        }
-                      }
-                    }}
-                    modifiers={{
-                      highlighted: (date) => getDateHighlight(date) !== null,
-                      hasLog: (date) => hasLogForDate(date),
-                    }}
-                    modifiersClassNames={{
-                      highlighted: "bg-pink-100 dark:bg-pink-900/30 text-pink-600 dark:text-pink-300 font-medium",
-                    }}
-                    className="rounded-md border border-pink-100 dark:border-pink-900/20 p-3"
-                  />
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="space-y-6"
-            >
-              <Card className="overflow-hidden border-0 shadow-lg bg-gradient-to-br from-white to-purple-50/50 dark:from-slate-950 dark:to-purple-900/10">
-                <CardHeader className="border-b border-purple-100 dark:border-purple-900/20">
-                  <CardTitle className="flex items-center gap-2">
-                    <Activity className="h-5 w-5 text-purple-500" />
-                    Daily Log
-                  </CardTitle>
-                  <CardDescription>Record your daily symptoms and mood</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6 p-6">
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium flex items-center gap-2">
-                        <Droplet className="h-4 w-4 text-red-500" />
-                        Flow Intensity
-                      </label>
-                      <Select value={flow} onValueChange={(value: any) => setFlow(value)}>
-                        <SelectTrigger className="bg-white/50 dark:bg-slate-900/50 border-purple-100 dark:border-purple-900/20">
-                          <SelectValue placeholder="Select flow intensity" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="light">
-                            <div className="flex items-center gap-2">
-                              <div className="w-2 h-2 rounded-full bg-pink-300" />
-                              Light
-                            </div>
-                          </SelectItem>
-                          <SelectItem value="medium">
-                            <div className="flex items-center gap-2">
-                              <div className="w-2 h-2 rounded-full bg-pink-500" />
-                              Medium
-                            </div>
-                          </SelectItem>
-                          <SelectItem value="heavy">
-                            <div className="flex items-center gap-2">
-                              <div className="w-2 h-2 rounded-full bg-pink-700" />
-                              Heavy
-                            </div>
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium flex items-center gap-2">
-                        <Activity className="h-4 w-4 text-orange-500" />
-                        Pain Level
-                      </label>
-                      <div className="bg-white/50 dark:bg-slate-900/50 p-4 rounded-lg border border-purple-100 dark:border-purple-900/20">
-                        <Slider
-                          value={[painLevel]}
-                          onValueChange={(value) => setPainLevel(value[0])}
-                          max={10}
-                          step={1}
-                          className="pain-level-slider"
-                        />
-                        <div className="flex justify-between mt-2 text-sm text-muted-foreground">
-                          <span>No Pain</span>
-                          <span className="font-medium text-orange-500">{painLevel}/10</span>
-                          <span>Severe</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium flex items-center gap-2">
-                        <Smile className="h-4 w-4 text-yellow-500" />
-                        Mood
-                      </label>
-                      <Select value={mood} onValueChange={(value) => setMood(value)}>
-                        <SelectTrigger className="bg-white/50 dark:bg-slate-900/50 border-purple-100 dark:border-purple-900/20">
-                          <SelectValue placeholder="How are you feeling?" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="happy">
-                            <div className="flex items-center gap-2">
-                              <span className="text-yellow-500">😊</span>
-                              Happy
-                            </div>
-                          </SelectItem>
-                          <SelectItem value="normal">
-                            <div className="flex items-center gap-2">
-                              <span className="text-blue-500">😐</span>
-                              Normal
-                            </div>
-                          </SelectItem>
-                          <SelectItem value="sad">
-                            <div className="flex items-center gap-2">
-                              <span className="text-purple-500">😢</span>
-                              Sad
-                            </div>
-                          </SelectItem>
-                          <SelectItem value="irritated">
-                            <div className="flex items-center gap-2">
-                              <span className="text-red-500">😠</span>
-                              Irritated
-                            </div>
-                          </SelectItem>
-                          <SelectItem value="anxious">
-                            <div className="flex items-center gap-2">
-                              <span className="text-orange-500">😰</span>
-                              Anxious
-                            </div>
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  <Button
-                    onClick={addCycleDay}
-                    className="w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white shadow-md group"
-                  >
-                    <Plus className="mr-2 h-4 w-4 group-hover:rotate-90 transition-transform" />
-                    Log Today
-                  </Button>
-                </CardContent>
-              </Card>
-
-              <SymptomsTracker
-                selectedSymptoms={selectedSymptoms}
-                onSymptomsChange={setSelectedSymptoms}
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="md:col-span-2"
-            >
-              <Card className="overflow-hidden border-0 shadow-lg bg-gradient-to-br from-white to-blue-50/50 dark:from-slate-950 dark:to-blue-900/10">
-                <CardHeader className="border-b border-blue-100 dark:border-blue-900/20">
-                  <CardTitle className="flex items-center gap-2">
-                    <Sparkles className="h-5 w-5 text-blue-500" />
-                    Cycle Insights
-                  </CardTitle>
-                  <CardDescription>Track your cycle patterns and predictions</CardDescription>
-                </CardHeader>
-                <CardContent className="p-6">
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <Card className="bg-white/50 dark:bg-slate-900/50 border-0 shadow-sm">
-                      <CardContent className="p-4">
-                        <div className="flex items-center gap-3">
-                          <div className="h-10 w-10 rounded-full bg-pink-100 dark:bg-pink-900/30 flex items-center justify-center">
-                            <CalendarDays className="h-5 w-5 text-pink-500" />
-                          </div>
-                          <div>
-                            <p className="text-sm font-medium">Cycle Length</p>
-                            <h3 className="text-2xl font-bold text-pink-600">{cycleLength} days</h3>
-                          </div>
-                        </div>
-                        <Progress value={(cycleLength / 35) * 100} className="mt-3 bg-pink-100 dark:bg-pink-900/30" />
-                      </CardContent>
-                    </Card>
-
-                    <Card className="bg-white/50 dark:bg-slate-900/50 border-0 shadow-sm">
-                      <CardContent className="p-4">
-                        <div className="flex items-center gap-3">
-                          <div className="h-10 w-10 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
-                            <Brain className="h-5 w-5 text-purple-500" />
-                          </div>
-                          <div>
-                            <p className="text-sm font-medium">Current Phase</p>
-                            <h3 className="text-2xl font-bold text-purple-600">Day {currentCycleDay}</h3>
-                          </div>
-                        </div>
-                        <div className="mt-3 flex items-center gap-2">
-                          <Badge variant="secondary" className="bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-300">
-                            {currentCycleDay <= 5 ? "Menstrual" :
-                              currentCycleDay <= 14 ? "Follicular" :
-                                currentCycleDay <= 21 ? "Ovulation" : "Luteal"}
-                          </Badge>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    <Card className="bg-white/50 dark:bg-slate-900/50 border-0 shadow-sm">
-                      <CardContent className="p-4">
-                        <div className="flex items-center gap-3">
-                          <div className="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                            <Droplets className="h-5 w-5 text-blue-500" />
-                          </div>
-                          <div>
-                            <p className="text-sm font-medium">Fertility Window</p>
-                            {calculateFertilityWindow() ? (
-                              <h3 className="text-lg font-bold text-blue-600">
-                                {calculateFertilityWindow()?.fertilityStart.toLocaleDateString()} -{" "}
-                                {calculateFertilityWindow()?.fertilityEnd.toLocaleDateString()}
-                              </h3>
-                            ) : (
-                              <Badge variant="outline">Log period to see predictions</Badge>
-                            )}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    <Card className="bg-white/50 dark:bg-slate-900/50 border-0 shadow-sm">
-                      <CardContent className="p-4">
-                        <div className="flex items-center gap-3">
-                          <div className="h-10 w-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
-                            <HeartPulse className="h-5 w-5 text-red-500" />
-                          </div>
-                          <div>
-                            <p className="text-sm font-medium">Next Period</p>
-                            {lastPeriodStart ? (
-                              <h3 className="text-lg font-bold text-red-600">
-                                {new Date(
-                                  lastPeriodStart.getTime() + cycleLength * 24 * 60 * 60 * 1000
-                                ).toLocaleDateString()}
-                              </h3>
-                            ) : (
-                              <Badge variant="outline">Log period to see predictions</Badge>
-                            )}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-
-                  <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="p-4 rounded-lg bg-gradient-to-r from-pink-50 to-purple-50 dark:from-pink-950/30 dark:to-purple-900/20">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Moon className="h-4 w-4 text-purple-500" />
-                        <h3 className="font-medium">Sleep Quality</h3>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Good</span>
-                        <Badge variant="secondary" className="bg-purple-100 dark:bg-purple-900/30">7.5 hrs avg</Badge>
-                      </div>
-                    </div>
-
-                    <div className="p-4 rounded-lg bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950/30 dark:to-cyan-900/20">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Thermometer className="h-4 w-4 text-blue-500" />
-                        <h3 className="font-medium">Temperature</h3>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Normal</span>
-                        <Badge variant="secondary" className="bg-blue-100 dark:bg-blue-900/30">98.6°F</Badge>
-                      </div>
-                    </div>
-
-                    <div className="p-4 rounded-lg bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-900/20">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Apple className="h-4 w-4 text-green-500" />
-                        <h3 className="font-medium">Nutrition</h3>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Iron Intake</span>
-                        <Badge variant="secondary" className="bg-green-100 dark:bg-green-900/30">18mg/day</Badge>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="cycle-view">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="w-full">
-              <CycleVisualizer
-                cycleLength={cycleLength}
-                currentDay={currentCycleDay}
-                lastPeriodStart={lastPeriodStart}
-              />
+    <div className="min-h-screen bg-background text-foreground flex">
+      <Sidebar />
+      <div className="flex-1 h-screen overflow-y-auto">
+        <div className="container mx-auto p-6 space-y-6">
+          {notification.visible && (
+            <div className="fixed top-4 right-4 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-100 px-4 py-2 rounded-lg shadow-lg z-50 animate-fade-in-out">
+              {notification.message}
             </div>
+          )}
 
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
-              <Card className="overflow-hidden border-0 shadow-lg bg-gradient-to-br from-white to-purple-50/50 dark:from-slate-950 dark:to-purple-900/10">
-                <CardHeader className="border-b border-purple-100 dark:border-purple-900/20">
-                  <CardTitle className="flex items-center gap-2">
-                    <LineChart className="h-5 w-5 text-purple-500" />
-                    Cycle Information
-                  </CardTitle>
-                  <CardDescription>Customize and track your cycle details</CardDescription>
-                </CardHeader>
-                <CardContent className="p-6 space-y-6">
-                  <div>
-                    <label className="text-sm font-medium flex items-center gap-2 mb-2">
-                      <CalendarDays className="h-4 w-4 text-purple-500" />
-                      Cycle Length (days)
-                    </label>
-                    <div className="bg-white/50 dark:bg-slate-900/50 p-4 rounded-lg border border-purple-100 dark:border-purple-900/20">
-                      <div className="flex items-center space-x-4">
-                        <Slider
-                          value={[cycleLength]}
-                          onValueChange={(value) => setCycleLength(value[0])}
-                          min={21}
-                          max={35}
-                          step={1}
-                          className="flex-1"
-                        />
-                        <span className="text-lg font-bold text-purple-600">{cycleLength}</span>
-                      </div>
-                      <div className="flex justify-between mt-2 text-xs text-muted-foreground">
-                        <span>Short</span>
-                        <span>Average</span>
-                        <span>Long</span>
-                      </div>
-                    </div>
-                  </div>
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="relative"
+          >
+            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-emerald-200/30 to-teal-200/20 dark:from-emerald-900/20 dark:to-teal-900/10 rounded-full blur-3xl -z-10" />
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-teal-200/30 to-emerald-200/20 dark:from-teal-900/20 dark:to-emerald-900/10 rounded-full blur-3xl -z-10" />
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <Card className="bg-white/50 dark:bg-slate-900/50 border border-purple-100 dark:border-purple-900/20">
-                      <CardContent className="p-4">
-                        <div className="flex items-center gap-2 mb-2">
-                          <Activity className="h-4 w-4 text-purple-500" />
-                          <h3 className="font-medium">Current Phase</h3>
-                        </div>
-                        <Badge variant="secondary" className="text-lg bg-purple-100 dark:bg-purple-900/30">
-                          Day {currentCycleDay}
-                        </Badge>
-                      </CardContent>
-                    </Card>
+            <div className="flex items-center justify-between mb-8">
+              <div>
+<h1 className="text-3xl font-bold text-white">
+  Menstruation Cycle Tracker
+</h1>
+                <p className="text-muted-foreground mt-2">Track, understand, and nurture your menstrual health</p>
+              </div>
+              <Button variant="outline" className="gap-2">
+                <Bell className="h-4 w-4 text-emerald-500" />
+                Set Reminders
+              </Button>
+            </div>
+          </motion.div>
 
-                    <Card className="bg-white/50 dark:bg-slate-900/50 border border-purple-100 dark:border-purple-900/20">
-                      <CardContent className="p-4">
-                        <div className="flex items-center gap-2 mb-2">
-                          <Droplet className="h-4 w-4 text-red-500" />
-                          <h3 className="font-medium">Last Period</h3>
-                        </div>
-                        {lastPeriodStart ? (
-                          <Badge variant="secondary" className="bg-red-100 dark:bg-red-900/30 text-red-600">
-                            {lastPeriodStart.toLocaleDateString()}
-                          </Badge>
-                        ) : (
-                          <Badge variant="outline">Not set</Badge>
-                        )}
-                      </CardContent>
-                    </Card>
-                  </div>
+          <Tabs defaultValue="daily-log" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-3 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-900/20 p-1 rounded-lg">
+              <TabsTrigger value="daily-log" className="flex items-center gap-2 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-900 data-[state=active]:text-emerald-600">
+                <CalendarDays className="h-4 w-4" />
+                Daily Log
+              </TabsTrigger>
+              <TabsTrigger value="cycle-view" className="flex items-center gap-2 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-900 data-[state=active]:text-teal-600">
+                <LineChart className="h-4 w-4" />
+                Cycle View
+              </TabsTrigger>
+              <TabsTrigger value="find-care" className="flex items-center gap-2 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-900 data-[state=active]:text-emerald-600">
+                <Heart className="h-4 w-4" />
+                Find Care
+              </TabsTrigger>
+              <TabsTrigger value="history" className="flex items-center gap-2">
+                <History className="h-4 w-4" />
+                History
+              </TabsTrigger>
+            </TabsList>
 
-                  <Card className="bg-white/50 dark:bg-slate-900/50 border border-purple-100 dark:border-purple-900/20">
+            <TabsContent value="daily-log" className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <Card className="overflow-hidden border-0 shadow-lg bg-gradient-to-br from-white to-emerald-50/50 dark:from-slate-950 dark:to-emerald-900/10">
+                    <CardHeader className="border-b border-emerald-100 dark:border-emerald-900/20">
+                      <CardTitle className="flex items-center gap-2">
+                        <CalendarIcon className="h-5 w-5 text-emerald-500" />
+                        Calendar
+                      </CardTitle>
+                      <CardDescription>Track your cycle and symptoms</CardDescription>
+                    </CardHeader>
                     <CardContent className="p-4">
-                      <div className="flex items-center gap-2 mb-4">
-                        <Brain className="h-4 w-4 text-blue-500" />
-                        <h3 className="font-medium">Cycle Phase Tips</h3>
+                      <Calendar
+                        mode="single"
+                        selected={selectedDate}
+                        onSelect={(date) => {
+                          if (date) {
+                            setSelectedDate(date);
+                            const existingLog = cycleDays.find(
+                              day => day.date.toDateString() === date.toDateString()
+                            );
+                            if (existingLog) {
+                              setFlow(existingLog.flow);
+                              setPainLevel(existingLog.painLevel);
+                              setMood(existingLog.mood);
+                              setSelectedSymptoms(existingLog.symptoms);
+                            } else {
+                              // Reset form for new entry
+                              setPainLevel(0);
+                              setFlow("medium");
+                              setMood("normal");
+                              setSelectedSymptoms([]);
+                            }
+                          }
+                        }}
+                        modifiers={{
+                          highlighted: (date) => getDateHighlight(date) !== null,
+                          hasLog: (date) => hasLogForDate(date),
+                        }}
+                        modifiersClassNames={{
+                          highlighted: "bg-emerald-100 dark:bg-emerald-900/30 text-white dark:text-white font-medium",
+                        }}
+                        className="rounded-md border border-emerald-100 dark:border-emerald-900/20 p-3"
+                      />
+                    </CardContent>
+                  </Card>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  className="space-y-6"
+                >
+                  <Card className="overflow-hidden border-0 shadow-lg bg-gradient-to-br from-white to-teal-50/50 dark:from-slate-950 dark:to-teal-900/10">
+                    <CardHeader className="border-b border-teal-100 dark:border-teal-900/20">
+                      <CardTitle className="flex items-center gap-2">
+                        <Activity className="h-5 w-5 text-teal-500" />
+                        Daily Log
+                      </CardTitle>
+                      <CardDescription>Record your daily symptoms and mood</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-6 p-6">
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium flex items-center gap-2">
+                            <Droplet className="h-4 w-4 text-red-500" />
+                            Flow Intensity
+                          </label>
+                          <Select value={flow} onValueChange={(value: any) => setFlow(value)}>
+                            <SelectTrigger className="bg-white/50 dark:bg-slate-900/50 border-teal-100 dark:border-teal-900/20">
+                              <SelectValue placeholder="Select flow intensity" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="light">
+                                <div className="flex items-center gap-2">
+                                  <div className="w-2 h-2 rounded-full bg-emerald-300" />
+                                  Light
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="medium">
+                                <div className="flex items-center gap-2">
+                                  <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                                  Medium
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="heavy">
+                                <div className="flex items-center gap-2">
+                                  <div className="w-2 h-2 rounded-full bg-emerald-700" />
+                                  Heavy
+                                </div>
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium flex items-center gap-2">
+                            <Activity className="h-4 w-4 text-orange-500" />
+                            Pain Level
+                          </label>
+                          <div className="bg-white/50 dark:bg-slate-900/50 p-4 rounded-lg border border-teal-100 dark:border-teal-900/20">
+                            <Slider
+                              value={[painLevel]}
+                              onValueChange={(value) => setPainLevel(value[0])}
+                              max={10}
+                              step={1}
+                              className="pain-level-slider"
+                            />
+                            <div className="flex justify-between mt-2 text-sm text-muted-foreground">
+                              <span>No Pain</span>
+                              <span className="font-medium text-orange-500">{painLevel}/10</span>
+                              <span>Severe</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium flex items-center gap-2">
+                            <Smile className="h-4 w-4 text-yellow-500" />
+                            Mood
+                          </label>
+                          <Select value={mood} onValueChange={(value) => setMood(value)}>
+                            <SelectTrigger className="bg-white/50 dark:bg-slate-900/50 border-teal-100 dark:border-teal-900/20">
+                              <SelectValue placeholder="How are you feeling?" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="happy">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-yellow-500">😊</span>
+                                  Happy
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="normal">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-blue-500">😐</span>
+                                  Normal
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="sad">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-purple-500">😢</span>
+                                  Sad
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="irritated">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-red-500">😠</span>
+                                  Irritated
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="anxious">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-orange-500">😰</span>
+                                  Anxious
+                                </div>
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
                       </div>
-                      <div className="space-y-3 text-sm">
-                        {currentCycleDay <= 5 ? (
-                          <>
-                            <p className="text-muted-foreground">During menstruation:</p>
-                            <ul className="list-disc pl-4 space-y-1">
-                              <li>Get plenty of rest</li>
-                              <li>Stay hydrated</li>
-                              <li>Consider iron-rich foods</li>
-                              <li>Light exercise can help with cramps</li>
-                            </ul>
-                          </>
-                        ) : currentCycleDay <= 14 ? (
-                          <>
-                            <p className="text-muted-foreground">During the follicular phase:</p>
-                            <ul className="list-disc pl-4 space-y-1">
-                              <li>Energy levels are rising</li>
-                              <li>Good time for new projects</li>
-                              <li>Focus on strength training</li>
-                              <li>Socialize and network</li>
-                            </ul>
-                          </>
-                        ) : currentCycleDay <= 21 ? (
-                          <>
-                            <p className="text-muted-foreground">During ovulation:</p>
-                            <ul className="list-disc pl-4 space-y-1">
-                              <li>Peak energy levels</li>
-                              <li>Good time for important decisions</li>
-                              <li>High fertility window</li>
-                              <li>Maintain active lifestyle</li>
-                            </ul>
-                          </>
-                        ) : (
-                          <>
-                            <p className="text-muted-foreground">During the luteal phase:</p>
-                            <ul className="list-disc pl-4 space-y-1">
-                              <li>Practice self-care</li>
-                              <li>Monitor mood changes</li>
-                              <li>Focus on relaxation</li>
-                              <li>Prepare for next cycle</li>
-                            </ul>
-                          </>
-                        )}
+
+                      <Button
+                        onClick={addCycleDay}
+                        className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white shadow-md group"
+                      >
+                        <Plus className="mr-2 h-4 w-4 group-hover:rotate-90 transition-transform" />
+                        Log Today
+                      </Button>
+                    </CardContent>
+                  </Card>
+
+                  <SymptomsTracker
+                    selectedSymptoms={selectedSymptoms}
+                    onSymptomsChange={setSelectedSymptoms}
+                  />
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.4 }}
+                  className="md:col-span-2"
+                >
+                  <Card className="overflow-hidden border-0 shadow-lg bg-gradient-to-br from-white to-blue-50/50 dark:from-slate-950 dark:to-blue-900/10">
+                    <CardHeader className="border-b border-blue-100 dark:border-blue-900/20">
+                      <CardTitle className="flex items-center gap-2">
+                        <Sparkles className="h-5 w-5 text-blue-500" />
+                        Cycle Insights
+                      </CardTitle>
+                      <CardDescription>Track your cycle patterns and predictions</CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-6">
+                      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <Card className="bg-white/50 dark:bg-slate-900/50 border-0 shadow-sm">
+                          <CardContent className="p-4">
+                            <div className="flex items-center gap-3">
+                              <div className="h-10 w-10 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
+                                <CalendarDays className="h-5 w-5 text-emerald-500" />
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium">Cycle Length</p>
+                                <h3 className="text-2xl font-bold text-white">{cycleLength} days</h3>
+                              </div>
+                            </div>
+                            <Progress value={(cycleLength / 35) * 100} className="mt-3 bg-emerald-100 dark:bg-emerald-900/30" />
+                          </CardContent>
+                        </Card>
+
+                        <Card className="bg-white/50 dark:bg-slate-900/50 border-0 shadow-sm">
+                          <CardContent className="p-4">
+                            <div className="flex items-center gap-3">
+                              <div className="h-10 w-10 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+                                <Brain className="h-5 w-5 text-purple-500" />
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium">Current Phase</p>
+                                <h3 className="text-2xl font-bold text-purple-600">Day {currentCycleDay}</h3>
+                              </div>
+                            </div>
+                            <div className="mt-3 flex items-center gap-2">
+                              <Badge variant="secondary" className="bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-300">
+                                {currentCycleDay <= 5 ? "Menstrual" :
+                                  currentCycleDay <= 14 ? "Follicular" :
+                                    currentCycleDay <= 21 ? "Ovulation" : "Luteal"}
+                              </Badge>
+                            </div>
+                          </CardContent>
+                        </Card>
+
+                        <Card className="bg-white/50 dark:bg-slate-900/50 border-0 shadow-sm">
+                          <CardContent className="p-4">
+                            <div className="flex items-center gap-3">
+                              <div className="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                                <Droplets className="h-5 w-5 text-blue-500" />
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium">Fertility Window</p>
+                                {calculateFertilityWindow() ? (
+                                  <h3 className="text-lg font-bold text-blue-600">
+                                    {calculateFertilityWindow()?.fertilityStart.toLocaleDateString()} -{" "}
+                                    {calculateFertilityWindow()?.fertilityEnd.toLocaleDateString()}
+                                  </h3>
+                                ) : (
+                                  <Badge variant="outline">Log period to see predictions</Badge>
+                                )}
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+
+                        <Card className="bg-white/50 dark:bg-slate-900/50 border-0 shadow-sm">
+                          <CardContent className="p-4">
+                            <div className="flex items-center gap-3">
+                              <div className="h-10 w-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
+                                <HeartPulse className="h-5 w-5 text-red-500" />
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium">Next Period</p>
+                                {lastPeriodStart ? (
+                                  <h3 className="text-lg font-bold text-red-600">
+                                    {new Date(
+                                      lastPeriodStart.getTime() + cycleLength * 24 * 60 * 60 * 1000
+                                    ).toLocaleDateString()}
+                                  </h3>
+                                ) : (
+                                  <Badge variant="outline">Log period to see predictions</Badge>
+                                )}
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
+
+                      <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="p-4 rounded-lg bg-gradient-to-r from-pink-50 to-purple-50 dark:from-pink-950/30 dark:to-purple-900/20">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Moon className="h-4 w-4 text-purple-500" />
+                            <h3 className="font-medium">Sleep Quality</h3>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-muted-foreground">Good</span>
+                            <Badge variant="secondary" className="bg-purple-100 dark:bg-purple-900/30">7.5 hrs avg</Badge>
+                          </div>
+                        </div>
+
+                        <div className="p-4 rounded-lg bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950/30 dark:to-cyan-900/20">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Thermometer className="h-4 w-4 text-blue-500" />
+                            <h3 className="font-medium">Temperature</h3>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-muted-foreground">Normal</span>
+                            <Badge variant="secondary" className="bg-blue-100 dark:bg-blue-900/30">98.6°F</Badge>
+                          </div>
+                        </div>
+
+                        <div className="p-4 rounded-lg bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-900/20">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Apple className="h-4 w-4 text-green-500" />
+                            <h3 className="font-medium">Nutrition</h3>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-muted-foreground">Iron Intake</span>
+                            <Badge variant="secondary" className="bg-green-100 dark:bg-green-900/30">18mg/day</Badge>
+                          </div>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
+                </motion.div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="cycle-view">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="w-full">
+                  <CycleVisualizer
+                    cycleLength={cycleLength}
+                    currentDay={currentCycleDay}
+                    lastPeriodStart={lastPeriodStart}
+                  />
+                </div>
+
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                >
+                  <Card className="overflow-hidden border-0 shadow-lg bg-gradient-to-br from-white to-purple-50/50 dark:from-slate-950 dark:to-purple-900/10">
+                    <CardHeader className="border-b border-purple-100 dark:border-purple-900/20">
+                      <CardTitle className="flex items-center gap-2">
+                        <LineChart className="h-5 w-5 text-purple-500" />
+                        Cycle Information
+                      </CardTitle>
+                      <CardDescription>Customize and track your cycle details</CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-6 space-y-6">
+                      <div>
+                        <label className="text-sm font-medium flex items-center gap-2 mb-2">
+                          <CalendarDays className="h-4 w-4 text-purple-500" />
+                          Cycle Length (days)
+                        </label>
+                        <div className="bg-white/50 dark:bg-slate-900/50 p-4 rounded-lg border border-purple-100 dark:border-purple-900/20">
+                          <div className="flex items-center space-x-4">
+                            <Slider
+                              value={[cycleLength]}
+                              onValueChange={(value) => setCycleLength(value[0])}
+                              min={21}
+                              max={35}
+                              step={1}
+                              className="flex-1"
+                            />
+                            <span className="text-lg font-bold text-purple-600">{cycleLength}</span>
+                          </div>
+                          <div className="flex justify-between mt-2 text-xs text-muted-foreground">
+                            <span>Short</span>
+                            <span>Average</span>
+                            <span>Long</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <Card className="bg-white/50 dark:bg-slate-900/50 border border-purple-100 dark:border-purple-900/20">
+                          <CardContent className="p-4">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Activity className="h-4 w-4 text-purple-500" />
+                              <h3 className="font-medium">Current Phase</h3>
+                            </div>
+                            <Badge variant="secondary" className="text-lg bg-purple-100 dark:bg-purple-900/30">
+                              Day {currentCycleDay}
+                            </Badge>
+                          </CardContent>
+                        </Card>
+
+                        <Card className="bg-white/50 dark:bg-slate-900/50 border border-purple-100 dark:border-purple-900/20">
+                          <CardContent className="p-4">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Droplet className="h-4 w-4 text-red-500" />
+                              <h3 className="font-medium">Last Period</h3>
+                            </div>
+                            {lastPeriodStart ? (
+                              <Badge variant="secondary" className="bg-red-100 dark:bg-red-900/30 text-red-600">
+                                {lastPeriodStart.toLocaleDateString()}
+                              </Badge>
+                            ) : (
+                              <Badge variant="outline">Not set</Badge>
+                            )}
+                          </CardContent>
+                        </Card>
+                      </div>
+
+                      <Card className="bg-white/50 dark:bg-slate-900/50 border border-purple-100 dark:border-purple-900/20">
+                        <CardContent className="p-4">
+                          <div className="flex items-center gap-2 mb-4">
+                            <Brain className="h-4 w-4 text-blue-500" />
+                            <h3 className="font-medium">Cycle Phase Tips</h3>
+                          </div>
+                          <div className="space-y-3 text-sm">
+                            {currentCycleDay <= 5 ? (
+                              <>
+                                <p className="text-muted-foreground">During menstruation:</p>
+                                <ul className="list-disc pl-4 space-y-1">
+                                  <li>Get plenty of rest</li>
+                                  <li>Stay hydrated</li>
+                                  <li>Consider iron-rich foods</li>
+                                  <li>Light exercise can help with cramps</li>
+                                </ul>
+                              </>
+                            ) : currentCycleDay <= 14 ? (
+                              <>
+                                <p className="text-muted-foreground">During the follicular phase:</p>
+                                <ul className="list-disc pl-4 space-y-1">
+                                  <li>Energy levels are rising</li>
+                                  <li>Good time for new projects</li>
+                                  <li>Focus on strength training</li>
+                                  <li>Socialize and network</li>
+                                </ul>
+                              </>
+                            ) : currentCycleDay <= 21 ? (
+                              <>
+                                <p className="text-muted-foreground">During ovulation:</p>
+                                <ul className="list-disc pl-4 space-y-1">
+                                  <li>Peak energy levels</li>
+                                  <li>Good time for important decisions</li>
+                                  <li>High fertility window</li>
+                                  <li>Maintain active lifestyle</li>
+                                </ul>
+                              </>
+                            ) : (
+                              <>
+                                <p className="text-muted-foreground">During the luteal phase:</p>
+                                <ul className="list-disc pl-4 space-y-1">
+                                  <li>Practice self-care</li>
+                                  <li>Monitor mood changes</li>
+                                  <li>Focus on relaxation</li>
+                                  <li>Prepare for next cycle</li>
+                                </ul>
+                              </>
+                            )}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="find-care">
+              <ClinicLocator />
+            </TabsContent>
+
+            <TabsContent value="history" className="space-y-6">
+              <Card className="bg-gradient-to-br from-white to-pink-50/30 dark:from-slate-950 dark:to-pink-900/10 border-0 shadow-lg">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-2xl bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">Cycle History</CardTitle>
+                    <div className="flex gap-2">
+                      <Button
+                        variant={historyView === "list" ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setHistoryView("list")}
+                        className={historyView === "list" ? "bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700" : ""}
+                      >
+                        <ListIcon className="h-4 w-4 mr-1" />
+                        List View
+                      </Button>
+                      <Button
+                        variant={historyView === "stats" ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setHistoryView("stats")}
+                        className={historyView === "stats" ? "bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700" : ""}
+                      >
+                        <BarChart className="h-4 w-4 mr-1" />
+                        Statistics
+                      </Button>
+                    </div>
+                  </div>
+                  <CardDescription>
+                    Track your cycle patterns and identify trends over time
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {renderHistoryContent()}
                 </CardContent>
               </Card>
-            </motion.div>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="find-care">
-          <ClinicLocator />
-        </TabsContent>
-
-        <TabsContent value="history" className="space-y-6">
-          <Card className="bg-gradient-to-br from-white to-pink-50/30 dark:from-slate-950 dark:to-pink-900/10 border-0 shadow-lg">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-2xl bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">Cycle History</CardTitle>
-                <div className="flex gap-2">
-                  <Button
-                    variant={historyView === "list" ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setHistoryView("list")}
-                    className={historyView === "list" ? "bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700" : ""}
-                  >
-                    <ListIcon className="h-4 w-4 mr-1" />
-                    List View
-                  </Button>
-                  <Button
-                    variant={historyView === "stats" ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setHistoryView("stats")}
-                    className={historyView === "stats" ? "bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700" : ""}
-                  >
-                    <BarChart className="h-4 w-4 mr-1" />
-                    Statistics
-                  </Button>
-                </div>
-              </div>
-              <CardDescription>
-                Track your cycle patterns and identify trends over time
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {renderHistoryContent()}
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </div>
     </div>
   );
 }
