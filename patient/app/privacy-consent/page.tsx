@@ -15,6 +15,7 @@ import {
     getPrivacyPolicy,
 } from "@/lib/api";
 import { Shield, Download, Trash2, History, Eye, AlertTriangle, FileText, Lock, ExternalLink } from "lucide-react";
+import { Sidebar } from "@/components/layout/sidebar";
 
 export default function PrivacyPage() {
     const { data: session, status } = useSession();
@@ -197,8 +198,10 @@ export default function PrivacyPage() {
     ];
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950 py-8 px-4">
-            <div className="max-w-3xl mx-auto space-y-6">
+        <div className="min-h-screen bg-background text-foreground flex">
+            <Sidebar />
+            <div className="flex-1 overflow-y-auto">
+            <div className="container mx-auto px-4 py-8 max-w-3xl space-y-6">
                 {/* Header */}
                 <div className="text-center mb-4">
                     <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-100 dark:bg-emerald-900/30 rounded-full mb-4">
@@ -581,6 +584,7 @@ export default function PrivacyPage() {
                     <p>VaidyaSetu complies with the Digital Personal Data Protection Act, 2023 (India) and HIPAA (USA).</p>
                     <p className="mt-1">Data Protection Officer: Dr. Sujal Jadhav — privacy@vaidyasetu.com</p>
                 </div>
+            </div>
             </div>
         </div>
     );
