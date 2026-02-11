@@ -2,11 +2,13 @@ const express = require('express');
 const router = express.Router();
 const HealthMetrics = require('../models/HealthMetrics');
 const { authMiddleware } = require('../middleware/auth');
+const { verifyPatientOwnership, consentGate } = require('../middleware/ownershipCheck');
+const { validate } = require('../middleware/dataSanitizer');
 
 // @route   POST /api/v1/health-metrics/:patientId
 // @desc    Upload/replace health metrics (smartwatch data)
-// @access  Private
-router.post('/:patientId', authMiddleware, async (req, res, next) => {
+// @access  Private (ownership verified, consent required)
+router.post('/:patientId', authMiddleware, verifyPatientOwnership, consentGate('healthDataProcessing'), validate('healthMetrics'), async (req, res, next) => {
     try {
         const { patientId } = req.params;
         const { vitals, activity } = req.body;
@@ -49,8 +51,8 @@ router.post('/:patientId', authMiddleware, async (req, res, next) => {
 
 // @route   GET /api/v1/health-metrics/:patientId/latest
 // @desc    Get latest health metrics for patient
-// @access  Private
-router.get('/:patientId/latest', authMiddleware, async (req, res, next) => {
+// @access  Private (ownership verified)
+router.get('/:patientId/latest', authMiddleware, verifyPatientOwnership, consentGate('healthDataProcessing'), async (req, res, next) => {
     try {
         const metrics = await HealthMetrics.findOne({
             patientId: req.params.patientId
@@ -75,8 +77,8 @@ router.get('/:patientId/latest', authMiddleware, async (req, res, next) => {
 
 // @route   GET /api/v1/health-metrics/:patientId/history
 // @desc    Get health metrics history (date range)
-// @access  Private
-router.get('/:patientId/history', authMiddleware, async (req, res, next) => {
+// @access  Private (ownership verified)
+router.get('/:patientId/history', authMiddleware, verifyPatientOwnership, async (req, res, next) => {
     try {
         const { startDate, endDate, limit = 30 } = req.query;
 

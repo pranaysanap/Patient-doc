@@ -2,11 +2,13 @@ const express = require('express');
 const router = express.Router();
 const Prescription = require('../models/Prescription');
 const { authMiddleware, requireDoctor } = require('../middleware/auth');
+const { verifyPatientOwnership, verifyPrescriptionAccess, consentGate } = require('../middleware/ownershipCheck');
+const { validate } = require('../middleware/dataSanitizer');
 
 // @route   POST /api/v1/prescriptions
 // @desc    Create new prescription (doctor only)
 // @access  Private/Doctor
-router.post('/', authMiddleware, requireDoctor, async (req, res, next) => {
+router.post('/', authMiddleware, requireDoctor, validate('createPrescription'), async (req, res, next) => {
     try {
         const { patientId, diagnosis, medicines, instructions, expiryDate, patientName } = req.body;
 
@@ -63,8 +65,8 @@ router.get('/doctor', authMiddleware, requireDoctor, async (req, res, next) => {
 
 // @route   GET /api/v1/prescriptions/patient/:patientId
 // @desc    Get all prescriptions for a patient
-// @access  Private
-router.get('/patient/:patientId', authMiddleware, async (req, res, next) => {
+// @access  Private (ownership verified)
+router.get('/patient/:patientId', authMiddleware, verifyPatientOwnership, consentGate('healthDataProcessing'), async (req, res, next) => {
     try {
         const { status } = req.query;
 
@@ -88,8 +90,8 @@ router.get('/patient/:patientId', authMiddleware, async (req, res, next) => {
 
 // @route   GET /api/v1/prescriptions/:prescriptionId
 // @desc    Get specific prescription
-// @access  Private
-router.get('/:prescriptionId', authMiddleware, async (req, res, next) => {
+// @access  Private (ownership verified)
+router.get('/:prescriptionId', authMiddleware, verifyPrescriptionAccess, async (req, res, next) => {
     try {
         const prescription = await Prescription.findOne({
             prescriptionId: req.params.prescriptionId
@@ -116,9 +118,18 @@ router.get('/:prescriptionId', authMiddleware, async (req, res, next) => {
 // @access  Private/Doctor
 router.put('/:prescriptionId', authMiddleware, requireDoctor, async (req, res, next) => {
     try {
+        // Whitelist allowed fields (prevent mass assignment)
+        const { diagnosis, medicines, instructions, expiryDate, status } = req.body;
+        const allowedUpdates = {};
+        if (diagnosis) allowedUpdates.diagnosis = diagnosis;
+        if (medicines) allowedUpdates.medicines = medicines;
+        if (instructions !== undefined) allowedUpdates.instructions = instructions;
+        if (expiryDate) allowedUpdates.expiryDate = expiryDate;
+        if (status) allowedUpdates.status = status;
+
         const prescription = await Prescription.findOneAndUpdate(
             { prescriptionId: req.params.prescriptionId },
-            req.body,
+            allowedUpdates,
             { new: true, runValidators: true }
         );
 

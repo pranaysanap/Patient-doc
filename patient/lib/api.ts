@@ -237,3 +237,108 @@ export const updateMyProfile = async (data: {
         body: JSON.stringify(data),
     });
 };
+
+// ==================== HIPAA/DPDP CONSENT ====================
+
+/**
+ * Get current consent status
+ */
+export const getConsentStatus = async () => {
+    return fetchWithAuth(`${API_BASE_URL}/consent`);
+};
+
+/**
+ * Grant initial consent (required before using the platform)
+ */
+export const grantConsent = async (consentData: {
+    dataCollection: boolean;
+    healthDataProcessing: boolean;
+    aiAnalysis: boolean;
+    doctorDataSharing: boolean;
+    emailNotifications: boolean;
+    emergencyServices: boolean;
+    fitnessData: boolean;
+    privacyPolicyAccepted: boolean;
+    termsAccepted: boolean;
+    isMinor?: boolean;
+    parentGuardianName?: string;
+    parentGuardianEmail?: string;
+}) => {
+    return fetchWithAuth(`${API_BASE_URL}/consent`, {
+        method: 'POST',
+        body: JSON.stringify(consentData),
+    });
+};
+
+/**
+ * Update consent preferences
+ */
+export const updateConsent = async (consentData: Record<string, boolean>) => {
+    return fetchWithAuth(`${API_BASE_URL}/consent`, {
+        method: 'PUT',
+        body: JSON.stringify(consentData),
+    });
+};
+
+/**
+ * Withdraw all consents
+ */
+export const withdrawAllConsent = async () => {
+    return fetchWithAuth(`${API_BASE_URL}/consent/withdraw`, {
+        method: 'POST',
+    });
+};
+
+/**
+ * Get consent history
+ */
+export const getConsentHistory = async () => {
+    return fetchWithAuth(`${API_BASE_URL}/consent/history`);
+};
+
+// ==================== DATA RIGHTS (DPDP/HIPAA) ====================
+
+/**
+ * Export all patient data (Right to Portability)
+ */
+export const exportMyData = async () => {
+    return fetchWithAuth(`${API_BASE_URL}/data-rights/export`);
+};
+
+/**
+ * Delete account and all data (Right to Erasure)
+ */
+export const deleteMyAccount = async (reason?: string) => {
+    return fetchWithAuth(`${API_BASE_URL}/data-rights/delete-account`, {
+        method: 'DELETE',
+        body: JSON.stringify({
+            confirmDeletion: 'DELETE_MY_ACCOUNT',
+            reason: reason || 'User requested deletion',
+        }),
+    });
+};
+
+/**
+ * Get my audit log (Right to Access)
+ */
+export const getMyAuditLog = async (page = 1, limit = 50) => {
+    return fetchWithAuth(`${API_BASE_URL}/data-rights/audit-log?page=${page}&limit=${limit}`);
+};
+
+// ==================== COMPLIANCE ====================
+
+/**
+ * Get privacy policy
+ */
+export const getPrivacyPolicy = async () => {
+    const response = await fetch(`${API_BASE_URL}/compliance/privacy-policy`);
+    return response.json();
+};
+
+/**
+ * Get terms of service
+ */
+export const getTermsOfService = async () => {
+    const response = await fetch(`${API_BASE_URL}/compliance/terms`);
+    return response.json();
+};

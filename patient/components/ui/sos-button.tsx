@@ -156,6 +156,9 @@ export function SOSButton() {
         }
     };
 
+    // Only show SOS button when user is logged in
+    if (!session) return null;
+
     return (
         <>
             <motion.div

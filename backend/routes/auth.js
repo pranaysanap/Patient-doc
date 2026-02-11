@@ -5,13 +5,16 @@ const jwt = require('jsonwebtoken');
 const { OAuth2Client } = require('google-auth-library');
 const Doctor = require('../models/Doctor');
 const Patient = require('../models/Patient');
+const Consent = require('../models/Consent');
+const { validate } = require('../middleware/dataSanitizer');
+const { logAuditEvent } = require('../middleware/auditLog');
 
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // @route   POST /api/v1/auth/doctor/login
 // @desc    Doctor login with username/password
 // @access  Public
-router.post('/doctor/login', async (req, res, next) => {
+router.post('/doctor/login', validate('doctorLogin'), async (req, res, next) => {
     try {
         const { username, password } = req.body;
 
@@ -47,7 +50,7 @@ router.post('/doctor/login', async (req, res, next) => {
         doctor.lastLogin = new Date();
         await doctor.save();
 
-        // Generate JWT
+        // Generate JWT (reduced expiry for security — HIPAA best practice)
         const token = jwt.sign(
             {
                 id: doctor._id,
@@ -56,7 +59,7 @@ router.post('/doctor/login', async (req, res, next) => {
                 role: 'doctor'
             },
             process.env.JWT_SECRET,
-            { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
+            { expiresIn: process.env.JWT_EXPIRES_IN || '24h' }
         );
 
         res.json({
@@ -125,7 +128,7 @@ router.post('/patient/google', async (req, res, next) => {
             });
         }
 
-        // Generate JWT
+        // Generate JWT (reduced expiry — HIPAA best practice)
         const jwtToken = jwt.sign(
             {
                 id: patient._id,
@@ -134,7 +137,7 @@ router.post('/patient/google', async (req, res, next) => {
                 role: 'patient'
             },
             process.env.JWT_SECRET,
-            { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
+            { expiresIn: process.env.JWT_EXPIRES_IN || '24h' }
         );
 
         res.json({
@@ -161,7 +164,7 @@ router.post('/patient/google', async (req, res, next) => {
 // @route   POST /api/v1/auth/patient/register
 // @desc    Register/login patient using NextAuth session data (no Google token verification)
 // @access  Public
-router.post('/patient/register', async (req, res, next) => {
+router.post('/patient/register', validate('patientRegister'), async (req, res, next) => {
     try {
         const { name, email, image } = req.body;
 
@@ -197,7 +200,11 @@ router.post('/patient/register', async (req, res, next) => {
             await patient.save();
         }
 
-        // Generate JWT
+        // Check if patient has given consent
+        const consent = await Consent.findOne({ patientId: patient.patientId });
+        const hasConsent = consent?.hasGivenInitialConsent || false;
+
+        // Generate JWT (reduced expiry for security — HIPAA best practice)
         const jwtToken = jwt.sign(
             {
                 id: patient._id,
@@ -206,12 +213,13 @@ router.post('/patient/register', async (req, res, next) => {
                 role: 'patient'
             },
             process.env.JWT_SECRET,
-            { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
+            { expiresIn: process.env.JWT_EXPIRES_IN || '24h' }
         );
 
         res.json({
             success: true,
             token: jwtToken,
+            hasConsent,
             user: {
                 id: patient._id,
                 patientId: patient.patientId,

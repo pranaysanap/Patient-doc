@@ -3,12 +3,14 @@ const router = express.Router();
 const Appointment = require('../models/Appointment');
 const Patient = require('../models/Patient');
 const { authMiddleware, requireDoctor } = require('../middleware/auth');
+const { verifyPatientOwnership, verifyAppointmentAccess, consentGate } = require('../middleware/ownershipCheck');
+const { validate } = require('../middleware/dataSanitizer');
 const { generateMeetLink, sendAppointmentEmails } = require('../utils/emailService');
 
 // @route   POST /api/v1/appointments
 // @desc    Create new appointment
-// @access  Private
-router.post('/', authMiddleware, async (req, res, next) => {
+// @access  Private (consent required)
+router.post('/', authMiddleware, validate('createAppointment'), async (req, res, next) => {
     try {
         const {
             patientId,
@@ -119,8 +121,8 @@ router.get('/doctor', authMiddleware, requireDoctor, async (req, res, next) => {
 
 // @route   GET /api/v1/appointments/patient/:patientId
 // @desc    Get appointments for a patient
-// @access  Private
-router.get('/patient/:patientId', authMiddleware, async (req, res, next) => {
+// @access  Private (ownership verified)
+router.get('/patient/:patientId', authMiddleware, verifyPatientOwnership, async (req, res, next) => {
     try {
         const appointments = await Appointment.find({
             patientId: req.params.patientId
@@ -138,8 +140,8 @@ router.get('/patient/:patientId', authMiddleware, async (req, res, next) => {
 
 // @route   PATCH /api/v1/appointments/:appointmentId/status
 // @desc    Update appointment status
-// @access  Private
-router.patch('/:appointmentId/status', authMiddleware, async (req, res, next) => {
+// @access  Private (ownership verified)
+router.patch('/:appointmentId/status', authMiddleware, verifyAppointmentAccess, async (req, res, next) => {
     try {
         const { status } = req.body;
 
@@ -212,8 +214,8 @@ router.put('/:appointmentId/report', authMiddleware, requireDoctor, async (req, 
 
 // @route   DELETE /api/v1/appointments/:appointmentId
 // @desc    Cancel appointment
-// @access  Private
-router.delete('/:appointmentId', authMiddleware, async (req, res, next) => {
+// @access  Private (ownership verified)
+router.delete('/:appointmentId', authMiddleware, verifyAppointmentAccess, async (req, res, next) => {
     try {
         const appointment = await Appointment.findOneAndUpdate(
             { appointmentId: req.params.appointmentId },

@@ -181,3 +181,70 @@ export const logout = () => {
 export const getCurrentUser = async () => {
     return fetchWithAuth(`${API_BASE_URL}/auth/me`);
 };
+
+// ==================== HIPAA/DPDP COMPLIANCE ====================
+
+// Get compliance dashboard summary
+export const fetchComplianceDashboard = async () => {
+    return fetchWithAuth(`${API_BASE_URL}/compliance/dashboard`);
+};
+
+// Get full audit log (for compliance review)
+export const fetchAuditLog = async (params?: {
+    page?: number;
+    limit?: number;
+    action?: string;
+    resourceType?: string;
+    startDate?: string;
+    endDate?: string;
+}) => {
+    let url = `${API_BASE_URL}/data-rights/audit-log/full`;
+    const searchParams = new URLSearchParams();
+    if (params?.page) searchParams.append('page', params.page.toString());
+    if (params?.limit) searchParams.append('limit', params.limit.toString());
+    if (params?.action) searchParams.append('action', params.action);
+    if (params?.resourceType) searchParams.append('resourceType', params.resourceType);
+    if (params?.startDate) searchParams.append('startDate', params.startDate);
+    if (params?.endDate) searchParams.append('endDate', params.endDate);
+    const qs = searchParams.toString();
+    if (qs) url += `?${qs}`;
+    return fetchWithAuth(url);
+};
+
+// Report a security incident
+export const reportSecurityIncident = async (incidentData: {
+    type: string;
+    severity: string;
+    title: string;
+    description?: string;
+    affectedPatientIds?: string[];
+    affectedDataTypes?: string[];
+    estimatedRecordsAffected?: number;
+}) => {
+    return fetchWithAuth(`${API_BASE_URL}/compliance/incidents`, {
+        method: 'POST',
+        body: JSON.stringify(incidentData),
+    });
+};
+
+// Get all security incidents
+export const fetchSecurityIncidents = async (params?: { status?: string; severity?: string }) => {
+    let url = `${API_BASE_URL}/compliance/incidents`;
+    const searchParams = new URLSearchParams();
+    if (params?.status) searchParams.append('status', params.status);
+    if (params?.severity) searchParams.append('severity', params.severity);
+    const qs = searchParams.toString();
+    if (qs) url += `?${qs}`;
+    return fetchWithAuth(url);
+};
+
+// Update security incident
+export const updateSecurityIncident = async (
+    incidentId: string,
+    data: { status?: string; actionTaken?: string; rootCause?: string; preventiveMeasures?: string }
+) => {
+    return fetchWithAuth(`${API_BASE_URL}/compliance/incidents/${incidentId}`, {
+        method: 'PATCH',
+        body: JSON.stringify(data),
+    });
+};

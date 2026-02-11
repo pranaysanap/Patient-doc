@@ -9,7 +9,7 @@ import {
     Heart,
     Home,
     MessageSquare,
-    Settings,
+    Shield,
     User,
     Wind,
     CloudSun,
@@ -36,7 +36,7 @@ export function Sidebar() {
         { icon: Activity, label: "Fitness Tracker", href: "/fitness-tracker" },
         { icon: Heart, label: "Menstruation Tracker", href: "/menstruation-tracker" },
         { icon: Activity, label: "Learning Center", href: "/learning-center" },
-        { icon: Settings, label: "Settings", href: "/settings" },
+        { icon: Shield, label: "Privacy & Data", href: "/privacy-consent" },
     ];
 
     return (

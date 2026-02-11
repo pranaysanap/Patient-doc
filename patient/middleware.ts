@@ -16,5 +16,6 @@ export const config = {
         "/hospital-locator/:path*",
         "/vision/:path*",
         "/health-hub/:path*",
+        "/privacy-consent/:path*",
     ],
 };
