@@ -1,0 +1,8 @@
+{
+  "name": "VaidyaSetu Doctor Dashboard",
+  "description": "A high-end, AI-powered healthcare dashboard for doctors to monitor patients, manage prescriptions, and review health insights with a sleek dark/light mode UI.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
